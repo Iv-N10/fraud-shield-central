@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,10 +16,13 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [company, setCompany] = useState('');
   const [agreed, setAgreed] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const { signUp, user, loading } = useAuth();
+
+  // Redirect if user is already logged in
+  if (user && !loading) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,19 +33,11 @@ export default function Signup() {
       return;
     }
     
-    setLoading(true);
-
     try {
-      // In a real app, this would call an API to create a new account
-      toast({
-        title: 'Account created',
-        description: 'Welcome to FraudShield Central',
-      });
-      setTimeout(() => navigate('/dashboard'), 1000);
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+      await signUp(email, password, name, company);
+      // The auth context will handle redirection
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during signup');
     }
   };
 

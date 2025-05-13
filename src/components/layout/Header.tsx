@@ -1,73 +1,80 @@
 
 import React from 'react';
-import { Bell, ChevronDown, Search } from 'lucide-react';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
+import { Bell, Settings, Menu, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSidebarContext } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export function Header() {
-  const { toast } = useToast();
+  const { toggleSidebar } = useSidebarContext();
+  const { user, signOut } = useAuth();
   
-  const handleNotificationClick = () => {
-    toast({
-      title: "Notifications",
-      description: "You have 3 unread notifications",
-    });
+  // Extract initials from user's name or email
+  const getUserInitials = () => {
+    if (!user) return 'U';
+    
+    if (user.user_metadata?.name) {
+      const nameParts = user.user_metadata.name.split(' ');
+      if (nameParts.length > 1) {
+        return `${nameParts[0][0]}${nameParts[1][0]}`;
+      }
+      return nameParts[0][0];
+    }
+    
+    return user.email?.[0].toUpperCase() || 'U';
   };
 
   return (
-    <header className="h-16 border-b border-border flex items-center justify-between px-6">
-      <div className="md:w-[320px] hidden md:block">
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input 
-            placeholder="Search..." 
-            className="pl-8 h-9 md:w-[300px]" 
-          />
-        </div>
-      </div>
-      
-      <div className="flex items-center space-x-4">
-        <Button variant="outline" size="icon" onClick={handleNotificationClick} className="relative">
-          <Bell size={18} />
-          <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
-            3
-          </Badge>
+    <header className="border-b h-14 flex items-center px-4 lg:px-6">
+      <Button
+        size="icon"
+        variant="ghost"
+        className="mr-2 md:hidden"
+        onClick={toggleSidebar}
+      >
+        <Menu className="h-5 w-5" />
+        <span className="sr-only">Toggle sidebar</span>
+      </Button>
+
+      <div className="ml-auto flex items-center space-x-4">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="sr-only">Notifications</span>
         </Button>
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center space-x-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback>JD</AvatarFallback>
+            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.user_metadata?.name || user?.email || 'User'} />
+                <AvatarFallback>{getUserInitials()}</AvatarFallback>
               </Avatar>
-              <div className="flex items-center">
-                <span className="text-sm font-medium hidden md:inline-block">John Doe</span>
-                <ChevronDown size={16} className="ml-1" />
-              </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <div className="px-2 py-1.5">
-              <div className="text-sm font-medium">John Doe</div>
-              <div className="text-xs text-muted-foreground">john@example.com</div>
-            </div>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Organization Settings</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,31 +12,23 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const { signIn, user, loading } = useAuth();
+
+  // Redirect if user is already logged in
+  if (user && !loading) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
 
     try {
-      // In a real app, this would call an authentication API
-      if (email === 'demo@example.com' && password === 'password') {
-        toast({
-          title: 'Login successful',
-          description: 'Welcome back to FraudShield Central',
-        });
-        setTimeout(() => navigate('/dashboard'), 500);
-      } else {
-        setError('Invalid email or password');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+      await signIn(email, password);
+      // The auth context will handle redirection
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during login');
     }
   };
 
