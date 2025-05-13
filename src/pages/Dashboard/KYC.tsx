@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { FileUp, Check, Clock, X, Shield, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { FileUp, Check, Clock, X, Shield, ArrowRight, FileDown, Eye } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,73 +10,55 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
+import { DocumentUploader } from '@/components/KYC/DocumentUploader';
+import { KYCDocument, fetchUserDocuments, downloadDocument } from '@/services/kycService';
+import { useQuery } from '@tanstack/react-query';
 
 export default function KYC() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('upload');
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [documents, setDocuments] = useState<{
-    id: string;
-    name: string;
-    type: string;
-    status: 'pending' | 'verified' | 'rejected';
-    dateUploaded: string;
-  }[]>([
-    {
-      id: '1',
-      name: 'passport.jpg',
-      type: 'Passport',
-      status: 'verified',
-      dateUploaded: '2023-10-12'
-    },
-    {
-      id: '2',
-      name: 'address_proof.pdf',
-      type: 'Address Proof',
-      status: 'verified',
-      dateUploaded: '2023-10-12'
-    }
-  ]);
+  const [documentType, setDocumentType] = useState('Passport');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [dob, setDob] = useState('');
+  const [nationality, setNationality] = useState('');
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    
-    if (file) {
-      // Start fake progress
-      setUploadProgress(0);
-      const interval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev === null) return 0;
-          if (prev >= 95) {
-            clearInterval(interval);
-            return 100;
-          }
-          return prev + 5;
-        });
-      }, 100);
-      
-      // After "upload" completes
-      setTimeout(() => {
-        clearInterval(interval);
-        setUploadProgress(null);
-        
-        const newDocument = {
-          id: Date.now().toString(),
-          name: file.name,
-          type: 'ID Document',
-          status: 'pending' as const,
-          dateUploaded: new Date().toISOString().split('T')[0]
-        };
-        
-        setDocuments(prev => [...prev, newDocument]);
-        
-        toast({
-          title: 'Document uploaded',
-          description: 'Your document has been uploaded and is pending verification.'
-        });
-        
-        setActiveTab('documents');
-      }, 2000);
+  const { 
+    data: documents = [], 
+    isLoading,
+    error,
+    refetch 
+  } = useQuery({
+    queryKey: ['kycDocuments'],
+    queryFn: fetchUserDocuments
+  });
+  
+  useEffect(() => {
+    // Show error if any
+    if (error) {
+      toast({
+        title: 'Error fetching documents',
+        description: 'Could not load your documents. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  }, [error, toast]);
+  
+  const handleUploadSuccess = (newDoc: KYCDocument) => {
+    refetch();
+    setActiveTab('documents');
+  };
+  
+  const handleViewDocument = async (filePath: string) => {
+    try {
+      const url = await downloadDocument(filePath);
+      window.open(url, '_blank');
+    } catch (error) {
+      toast({
+        title: 'Error viewing document',
+        description: 'Could not open the document. Please try again later.',
+        variant: 'destructive',
+      });
     }
   };
   
@@ -130,22 +112,42 @@ export default function KYC() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" placeholder="John" />
+                      <Input 
+                        id="firstName" 
+                        placeholder="John"
+                        value={firstName}
+                        onChange={e => setFirstName(e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" placeholder="Doe" />
+                      <Input 
+                        id="lastName" 
+                        placeholder="Doe"
+                        value={lastName}
+                        onChange={e => setLastName(e.target.value)}
+                      />
                     </div>
                   </div>
                   
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="dob">Date of Birth</Label>
-                      <Input id="dob" type="date" />
+                      <Input 
+                        id="dob" 
+                        type="date"
+                        value={dob}
+                        onChange={e => setDob(e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="nationality">Nationality</Label>
-                      <Input id="nationality" placeholder="United States" />
+                      <Input 
+                        id="nationality" 
+                        placeholder="United States"
+                        value={nationality}
+                        onChange={e => setNationality(e.target.value)}
+                      />
                     </div>
                   </div>
                   
@@ -156,49 +158,36 @@ export default function KYC() {
                     <select 
                       id="documentType" 
                       className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      value={documentType}
+                      onChange={(e) => setDocumentType(e.target.value)}
                     >
-                      <option value="">Select document type</option>
-                      <option value="passport">Passport</option>
-                      <option value="driverLicense">Driver's License</option>
-                      <option value="nationalId">National ID Card</option>
+                      <option value="Passport">Passport</option>
+                      <option value="Driver's License">Driver's License</option>
+                      <option value="National ID">National ID Card</option>
+                      <option value="Address Proof">Address Proof</option>
                     </select>
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="documentFile">Upload Document</Label>
-                    <div className="border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center bg-muted/30">
-                      <FileUp className="h-8 w-8 text-muted-foreground mb-2" />
-                      <p className="mb-1 font-medium">Drag and drop or click to upload</p>
-                      <p className="text-xs text-muted-foreground mb-4">
-                        Supported formats: JPG, PNG, PDF, max 10MB
-                      </p>
-                      <Input 
-                        id="documentFile" 
-                        type="file" 
-                        className="hidden" 
-                        onChange={handleFileChange}
-                      />
-                      <Button onClick={() => document.getElementById('documentFile')?.click()}>
-                        Select File
-                      </Button>
-                      
-                      {uploadProgress !== null && (
-                        <div className="w-full mt-4 space-y-2">
-                          <div className="flex justify-between text-xs">
-                            <span>Uploading...</span>
-                            <span>{uploadProgress}%</span>
-                          </div>
-                          <Progress value={uploadProgress} className="h-1" />
-                        </div>
-                      )}
-                    </div>
+                    <DocumentUploader 
+                      onUploadSuccess={handleUploadSuccess}
+                      documentType={documentType}
+                    />
                   </div>
                 </div>
               </TabsContent>
               
               <TabsContent value="documents">
                 <div className="space-y-4">
-                  {documents.length > 0 ? (
+                  {isLoading ? (
+                    <div className="flex justify-center py-8">
+                      <div className="flex flex-col items-center">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+                        <p className="mt-2 text-sm text-muted-foreground">Loading documents...</p>
+                      </div>
+                    </div>
+                  ) : documents.length > 0 ? (
                     documents.map((doc) => (
                       <div key={doc.id} className="p-4 border rounded-md flex items-center justify-between bg-card">
                         <div className="flex items-center space-x-4">
@@ -210,9 +199,15 @@ export default function KYC() {
                         </div>
                         <div className="flex items-center space-x-2">
                           {getStatusBadge(doc.status)}
-                          <Button variant="ghost" size="sm">
-                            View
-                          </Button>
+                          {doc.filePath && (
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleViewDocument(doc.filePath!)}
+                            >
+                              <Eye className="h-4 w-4 mr-1" /> View
+                            </Button>
+                          )}
                         </div>
                       </div>
                     ))

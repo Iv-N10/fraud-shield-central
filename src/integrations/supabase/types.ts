@@ -9,6 +9,45 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      kyc_documents: {
+        Row: {
+          document_type: string
+          file_path: string
+          id: string
+          original_name: string
+          rejected_at: string | null
+          rejection_reason: string | null
+          status: string
+          uploaded_at: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          document_type: string
+          file_path: string
+          id?: string
+          original_name: string
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          status?: string
+          uploaded_at?: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          document_type?: string
+          file_path?: string
+          id?: string
+          original_name?: string
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          status?: string
+          uploaded_at?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
