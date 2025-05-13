@@ -3,7 +3,7 @@ import React from 'react';
 import { Bell, Settings, Menu, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { useSidebarContext } from '@/components/ui/sidebar';
+import { useSidebar } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export function Header() {
-  const { toggleSidebar } = useSidebarContext();
+  const { toggleSidebar } = useSidebar();
   const { user, signOut } = useAuth();
   
   // Extract initials from user's name or email
