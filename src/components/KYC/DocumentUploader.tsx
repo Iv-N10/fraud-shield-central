@@ -49,17 +49,25 @@ export function DocumentUploader({ onUploadSuccess, documentType }: DocumentUplo
       // Create file path with user ID to ensure RLS works correctly
       const filePath = `${user.id}/${documentType}_${Date.now()}_${file.name}`;
       
+      // Setup listener for upload progress
+      const progressHandler = (progress: { loaded: number; total: number }) => {
+        const percent = Math.round((progress.loaded / progress.total) * 100);
+        setUploadProgress(percent);
+      };
+      
+      // Add event listener for progress
+      window.addEventListener('storage-object-progress', progressHandler as EventListener);
+      
       // Upload to Supabase Storage
       const { data, error } = await supabase.storage
         .from('kyc_documents')
         .upload(filePath, file, {
-          onUploadProgress: (progress) => {
-            const percent = Math.round((progress.loaded / progress.total) * 100);
-            setUploadProgress(percent);
-          },
           cacheControl: '3600',
           contentType: file.type,
         });
+      
+      // Remove event listener after upload completes
+      window.removeEventListener('storage-object-progress', progressHandler as EventListener);
       
       if (error) throw error;
       
