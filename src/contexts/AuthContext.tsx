@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Session, User } from '@supabase/supabase-js';
@@ -22,6 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [authChangeProcessed, setAuthChangeProcessed] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener first
@@ -29,12 +29,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       (event, currentSession) => {
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
+        setAuthChangeProcessed(true);
         
         if (event === 'SIGNED_IN') {
           console.log('User signed in');
           // Use setTimeout to avoid potential deadlock
           setTimeout(() => {
-            navigate('/dashboard');
+            const currentPath = window.location.pathname;
+            if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
+              navigate('/dashboard');
+            }
           }, 0);
         } else if (event === 'SIGNED_OUT') {
           console.log('User signed out');
@@ -48,12 +52,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       setLoading(false);
+      
+      // Only redirect if there's a session and we haven't processed an auth change event
+      if (currentSession && !authChangeProcessed) {
+        const currentPath = window.location.pathname;
+        if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 0);
+        }
+      }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, authChangeProcessed]);
 
   const signIn = async (email: string, password: string) => {
     try {

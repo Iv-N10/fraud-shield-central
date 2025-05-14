@@ -10,14 +10,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
   
   if (loading) {
-    // You could add a loading spinner here
+    // Just show a loading spinner without redirecting
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
   
   if (!user) {
+    // Only redirect to login if we're sure there's no user
     return <Navigate to="/login" replace />;
   }
   
+  // User is authenticated, render children
   return <>{children}</>;
 };
 
