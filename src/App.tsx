@@ -15,6 +15,7 @@ import KYC from "./pages/Dashboard/KYC";
 import Transactions from "./pages/Dashboard/Transactions";
 import Reports from "./pages/Dashboard/Reports";
 import Settings from "./pages/Dashboard/Settings";
+import AIAssistant from "./pages/Dashboard/AIAssistant";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="kyc" element={<KYC />} />
               <Route path="transactions" element={<Transactions />} />
               <Route path="reports" element={<Reports />} />
+              <Route path="ai-assistant" element={<AIAssistant />} />
               <Route path="settings" element={<Settings />} />
             </Route>
             
