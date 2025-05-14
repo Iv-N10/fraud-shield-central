@@ -21,53 +21,79 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [authChangeProcessed, setAuthChangeProcessed] = useState(false);
-
+  
+  // Track initialization to avoid duplicate redirects
+  const [isInitialized, setIsInitialized] = useState(false);
+  
   useEffect(() => {
+    // Flag to prevent multiple redirects
+    let isRedirecting = false;
+    
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        console.log('Auth state changed:', event);
+        
+        // Update state synchronously
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
-        setAuthChangeProcessed(true);
         
-        if (event === 'SIGNED_IN') {
-          console.log('User signed in');
-          // Use setTimeout to avoid potential deadlock
-          setTimeout(() => {
+        // Only handle navigation on main auth events and if not already redirecting
+        if (!isRedirecting) {
+          if (event === 'SIGNED_IN') {
+            isRedirecting = true;
             const currentPath = window.location.pathname;
             if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
-              navigate('/dashboard');
+              console.log('Redirecting to dashboard after sign in');
+              navigate('/dashboard', { replace: true });
             }
-          }, 0);
-        } else if (event === 'SIGNED_OUT') {
-          console.log('User signed out');
-          navigate('/login');
+            // Reset flag after redirect
+            setTimeout(() => { isRedirecting = false; }, 100);
+          } else if (event === 'SIGNED_OUT') {
+            isRedirecting = true;
+            console.log('Redirecting to login after sign out');
+            navigate('/login', { replace: true });
+            // Reset flag after redirect
+            setTimeout(() => { isRedirecting = false; }, 100);
+          }
         }
       }
     );
 
-    // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      setLoading(false);
+    // Then check for existing session only once
+    const initializeAuth = async () => {
+      if (isInitialized) return;
       
-      // Only redirect if there's a session and we haven't processed an auth change event
-      if (currentSession && !authChangeProcessed) {
-        const currentPath = window.location.pathname;
-        if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
-          setTimeout(() => {
-            navigate('/dashboard');
-          }, 0);
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        
+        // Update state
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        
+        // Only redirect on initial load if we have a session
+        if (currentSession?.user && !isRedirecting) {
+          const currentPath = window.location.pathname;
+          if (currentPath === '/login' || currentPath === '/signup' || currentPath === '/') {
+            isRedirecting = true;
+            console.log('Initial redirect to dashboard');
+            navigate('/dashboard', { replace: true });
+            setTimeout(() => { isRedirecting = false; }, 100);
+          }
         }
+        
+        setIsInitialized(true);
+      } finally {
+        setLoading(false);
       }
-    });
+    };
+    
+    initializeAuth();
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate, authChangeProcessed]);
+  }, [navigate]);
 
   const signIn = async (email: string, password: string) => {
     try {

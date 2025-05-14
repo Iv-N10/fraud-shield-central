@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -9,17 +10,18 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
   
+  // Don't do anything while checking authentication status
   if (loading) {
-    // Just show a loading spinner without redirecting
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
   
+  // Only redirect if definitely not authenticated
   if (!user) {
-    // Only redirect to login if we're sure there's no user
+    console.log('Not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
   }
   
-  // User is authenticated, render children
+  // User is authenticated, render the protected content
   return <>{children}</>;
 };
 
