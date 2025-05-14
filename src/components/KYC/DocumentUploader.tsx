@@ -49,14 +49,22 @@ export function DocumentUploader({ onUploadSuccess, documentType }: DocumentUplo
       // Create file path with user ID to ensure RLS works correctly
       const filePath = `${user.id}/${documentType}_${Date.now()}_${file.name}`;
       
-      // Setup listener for upload progress
-      const progressHandler = (progress: { loaded: number; total: number }) => {
-        const percent = Math.round((progress.loaded / progress.total) * 100);
-        setUploadProgress(percent);
+      // Use a simulated progress approach since direct progress tracking 
+      // isn't available in the current Supabase Storage API
+      const simulateProgress = () => {
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 10;
+          if (progress > 95) {
+            progress = 95;
+            clearInterval(interval);
+          }
+          setUploadProgress(Math.min(Math.round(progress), 95));
+        }, 300);
+        return interval;
       };
       
-      // Add event listener for progress
-      window.addEventListener('storage-object-progress', progressHandler as EventListener);
+      const progressInterval = simulateProgress();
       
       // Upload to Supabase Storage
       const { data, error } = await supabase.storage
@@ -66,10 +74,13 @@ export function DocumentUploader({ onUploadSuccess, documentType }: DocumentUplo
           contentType: file.type,
         });
       
-      // Remove event listener after upload completes
-      window.removeEventListener('storage-object-progress', progressHandler as EventListener);
+      // Clear the simulated progress interval
+      clearInterval(progressInterval);
       
       if (error) throw error;
+      
+      // Set to 100% when upload is successful
+      setUploadProgress(100);
       
       // Save metadata to kyc_documents table
       const { error: dbError } = await supabase.from('kyc_documents').insert({
