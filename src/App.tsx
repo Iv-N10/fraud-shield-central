@@ -17,6 +17,8 @@ import Transactions from "./pages/Dashboard/Transactions";
 import Reports from "./pages/Dashboard/Reports";
 import Settings from "./pages/Dashboard/Settings";
 import AIAssistant from "./pages/Dashboard/AIAssistant";
+import Payments from "./pages/Dashboard/Payments";
+import MyTransactions from "./pages/Dashboard/MyTransactions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +42,8 @@ const App = () => (
               <Route path="transactions" element={<Transactions />} />
               <Route path="reports" element={<Reports />} />
               <Route path="ai-assistant" element={<AIAssistant />} />
+              <Route path="payments" element={<Payments />} />
+              <Route path="my-transactions" element={<MyTransactions />} />
               <Route path="settings" element={<Settings />} />
             </Route>
             

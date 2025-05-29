@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -9,7 +10,9 @@ import {
   FileText,
   Home,
   Activity,
-  Brain
+  Brain,
+  CreditCard,
+  Receipt
 } from 'lucide-react';
 import {
   Sidebar,
@@ -19,7 +22,8 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuButton
+  SidebarMenuButton,
+  SidebarGroupLabel
 } from "@/components/ui/sidebar";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -28,7 +32,7 @@ export function AppSidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = React.useState(false);
 
-  const navigationItems = [
+  const mainNavigationItems = [
     { 
       title: 'Dashboard', 
       icon: <Home size={20} />, 
@@ -63,7 +67,23 @@ export function AppSidebar() {
       title: 'AI Assistant', 
       icon: <Brain size={20} />, 
       path: '/ai-assistant' 
+    }
+  ];
+
+  const userSectionItems = [
+    {
+      title: 'Payments',
+      icon: <CreditCard size={20} />,
+      path: '/payments'
     },
+    {
+      title: 'My Transactions',
+      icon: <Receipt size={20} />,
+      path: '/my-transactions'
+    }
+  ];
+
+  const settingsItems = [
     { 
       title: 'Settings', 
       icon: <Settings size={20} />, 
@@ -116,9 +136,57 @@ export function AppSidebar() {
         )}
       </SidebarHeader>
       <SidebarContent>
+        {/* Main Navigation */}
         <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel>Main</SidebarGroupLabel>}
           <SidebarMenu>
-            {navigationItems.map((item) => (
+            {mainNavigationItems.map((item) => (
+              <SidebarMenuItem key={item.path}>
+                <SidebarMenuButton asChild>
+                  <Link 
+                    to={item.path} 
+                    className={cn(
+                      "nav-link", 
+                      isActive(item.path) ? "nav-link-active" : "hover:bg-muted/30"
+                    )}
+                  >
+                    {item.icon}
+                    {!collapsed && <span>{item.title}</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* User Section */}
+        <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel>User</SidebarGroupLabel>}
+          <SidebarMenu>
+            {userSectionItems.map((item) => (
+              <SidebarMenuItem key={item.path}>
+                <SidebarMenuButton asChild>
+                  <Link 
+                    to={item.path} 
+                    className={cn(
+                      "nav-link", 
+                      isActive(item.path) ? "nav-link-active" : "hover:bg-muted/30"
+                    )}
+                  >
+                    {item.icon}
+                    {!collapsed && <span>{item.title}</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Settings */}
+        <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel>System</SidebarGroupLabel>}
+          <SidebarMenu>
+            {settingsItems.map((item) => (
               <SidebarMenuItem key={item.path}>
                 <SidebarMenuButton asChild>
                   <Link 
