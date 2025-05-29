@@ -12,7 +12,9 @@ import {
   Activity,
   Brain,
   CreditCard,
-  Receipt
+  Receipt,
+  Building2,
+  Plug
 } from 'lucide-react';
 import {
   Sidebar,
@@ -67,6 +69,19 @@ export function AppSidebar() {
       title: 'AI Assistant', 
       icon: <Brain size={20} />, 
       path: '/ai-assistant' 
+    }
+  ];
+
+  const bankIntegrationItems = [
+    {
+      title: 'System Integration',
+      icon: <Plug size={20} />,
+      path: '/bank-integration'
+    },
+    {
+      title: 'Connected Banks',
+      icon: <Building2 size={20} />,
+      path: '/connected-banks'
     }
   ];
 
@@ -141,6 +156,29 @@ export function AppSidebar() {
           {!collapsed && <SidebarGroupLabel>Main</SidebarGroupLabel>}
           <SidebarMenu>
             {mainNavigationItems.map((item) => (
+              <SidebarMenuItem key={item.path}>
+                <SidebarMenuButton asChild>
+                  <Link 
+                    to={item.path} 
+                    className={cn(
+                      "nav-link", 
+                      isActive(item.path) ? "nav-link-active" : "hover:bg-muted/30"
+                    )}
+                  >
+                    {item.icon}
+                    {!collapsed && <span>{item.title}</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Bank Integration */}
+        <SidebarGroup>
+          {!collapsed && <SidebarGroupLabel>Bank Integration</SidebarGroupLabel>}
+          <SidebarMenu>
+            {bankIntegrationItems.map((item) => (
               <SidebarMenuItem key={item.path}>
                 <SidebarMenuButton asChild>
                   <Link 

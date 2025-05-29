@@ -19,6 +19,8 @@ import Settings from "./pages/Dashboard/Settings";
 import AIAssistant from "./pages/Dashboard/AIAssistant";
 import Payments from "./pages/Dashboard/Payments";
 import MyTransactions from "./pages/Dashboard/MyTransactions";
+import BankIntegration from "./pages/Dashboard/BankIntegration";
+import ConnectedBanks from "./pages/Dashboard/ConnectedBanks";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +46,8 @@ const App = () => (
               <Route path="ai-assistant" element={<AIAssistant />} />
               <Route path="payments" element={<Payments />} />
               <Route path="my-transactions" element={<MyTransactions />} />
+              <Route path="bank-integration" element={<BankIntegration />} />
+              <Route path="connected-banks" element={<ConnectedBanks />} />
               <Route path="settings" element={<Settings />} />
             </Route>
             
