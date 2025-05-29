@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -14,7 +13,8 @@ import {
   CreditCard,
   Receipt,
   Building2,
-  Plug
+  Plug,
+  Shield
 } from 'lucide-react';
 import {
   Sidebar,
@@ -49,6 +49,11 @@ export function AppSidebar() {
       title: 'AI Monitor', 
       icon: <Brain size={20} />, 
       path: '/ai-monitor' 
+    },
+    { 
+      title: 'Security Center', 
+      icon: <Shield size={20} />, 
+      path: '/security' 
     },
     { 
       title: 'KYC Verification', 

@@ -6,3 +6,6 @@ verify_jwt = true
 
 [functions.ai-learning]
 verify_jwt = true
+
+[functions.security-monitor]
+verify_jwt = true
