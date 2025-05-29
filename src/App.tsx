@@ -11,6 +11,7 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import AIMonitor from "./pages/Dashboard/AIMonitor";
 import KYC from "./pages/Dashboard/KYC";
 import Transactions from "./pages/Dashboard/Transactions";
 import Reports from "./pages/Dashboard/Reports";
@@ -34,6 +35,7 @@ const App = () => (
             
             <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="ai-monitor" element={<AIMonitor />} />
               <Route path="kyc" element={<KYC />} />
               <Route path="transactions" element={<Transactions />} />
               <Route path="reports" element={<Reports />} />

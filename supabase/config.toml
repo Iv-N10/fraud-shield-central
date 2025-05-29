@@ -3,3 +3,6 @@ project_id = "cautkcuzwiwfvixzsuyh"
 
 [functions.fraud-ai]
 verify_jwt = true
+
+[functions.ai-learning]
+verify_jwt = true

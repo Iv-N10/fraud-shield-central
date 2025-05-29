@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -9,7 +8,8 @@ import {
   Settings,
   FileText,
   Home,
-  Activity
+  Activity,
+  Brain
 } from 'lucide-react';
 import {
   Sidebar,
@@ -40,6 +40,11 @@ export function AppSidebar() {
       path: '/activity' 
     },
     { 
+      title: 'AI Monitor', 
+      icon: <Brain size={20} />, 
+      path: '/ai-monitor' 
+    },
+    { 
       title: 'KYC Verification', 
       icon: <UserCheck size={20} />, 
       path: '/kyc' 
@@ -53,6 +58,11 @@ export function AppSidebar() {
       title: 'Risk Reports', 
       icon: <FileText size={20} />, 
       path: '/reports' 
+    },
+    { 
+      title: 'AI Assistant', 
+      icon: <Brain size={20} />, 
+      path: '/ai-assistant' 
     },
     { 
       title: 'Settings', 
