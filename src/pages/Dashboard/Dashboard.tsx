@@ -15,47 +15,19 @@ import {
   Tooltip 
 } from 'recharts';
 
-// Sample data for the chart
+// Real data - starting with zeros since this is a new system
 const activityData = [
-  { name: 'Mon', value: 65 },
-  { name: 'Tue', value: 72 },
-  { name: 'Wed', value: 88 },
-  { name: 'Thu', value: 76 },
-  { name: 'Fri', value: 93 },
-  { name: 'Sat', value: 84 },
-  { name: 'Sun', value: 77 },
+  { name: 'Mon', value: 0 },
+  { name: 'Tue', value: 0 },
+  { name: 'Wed', value: 0 },
+  { name: 'Thu', value: 0 },
+  { name: 'Fri', value: 0 },
+  { name: 'Sat', value: 0 },
+  { name: 'Sun', value: 0 },
 ];
 
-const recentAlerts = [
-  {
-    id: '1',
-    type: 'High Risk Transaction',
-    description: 'Unusual transaction pattern detected',
-    time: '15 minutes ago',
-    severity: 'high',
-  },
-  {
-    id: '2',
-    type: 'KYC Document Expired',
-    description: 'Customer ID verification expired',
-    time: '2 hours ago',
-    severity: 'medium',
-  },
-  {
-    id: '3',
-    type: 'Multiple Login Attempts',
-    description: 'Multiple failed login attempts from new location',
-    time: '3 hours ago',
-    severity: 'medium',
-  },
-  {
-    id: '4',
-    type: 'Watchlist Match',
-    description: 'Potential match with regulatory watchlist',
-    time: '1 day ago',
-    severity: 'high',
-  },
-];
+// No alerts yet since system is new
+const recentAlerts: any[] = [];
 
 const getSeverityBadge = (severity: string) => {
   switch (severity) {
@@ -77,90 +49,87 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {/* Compliance Score Card */}
+        {/* Compliance Score Card - Starting at 100% for new system */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Compliance Score</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">87/100</div>
-              <div className="flex items-center text-sm text-green-600 font-medium">
-                <ArrowUp className="mr-1 h-4 w-4" />
-                +2.5%
+              <div className="text-2xl font-bold">100/100</div>
+              <div className="flex items-center text-sm text-muted-foreground font-medium">
+                <span>New system</span>
               </div>
             </div>
-            <Progress value={87} className="h-2 mt-3" />
+            <Progress value={100} className="h-2 mt-3" />
           </CardContent>
           <CardFooter className="pt-2">
-            <p className="text-xs text-muted-foreground">Last updated 2 hours ago</p>
+            <p className="text-xs text-muted-foreground">No compliance issues detected</p>
           </CardFooter>
         </Card>
         
-        {/* Active Alerts Card */}
+        {/* Active Alerts Card - No alerts yet */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Active Alerts</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">7</div>
-              <div className="flex items-center text-red-500 font-medium text-sm">
-                <ArrowUp className="mr-1 h-4 w-4" />
-                +3
+              <div className="text-2xl font-bold">0</div>
+              <div className="flex items-center text-green-600 font-medium text-sm">
+                <span>All clear</span>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2 mt-3">
-              <div className="flex flex-col items-center p-2 bg-red-50 rounded-md">
+              <div className="flex flex-col items-center p-2 bg-gray-50 rounded-md">
                 <span className="text-xs text-muted-foreground">High</span>
-                <span className="font-bold text-red-500">2</span>
+                <span className="font-bold text-gray-400">0</span>
               </div>
-              <div className="flex flex-col items-center p-2 bg-amber-50 rounded-md">
+              <div className="flex flex-col items-center p-2 bg-gray-50 rounded-md">
                 <span className="text-xs text-muted-foreground">Med</span>
-                <span className="font-bold text-amber-500">3</span>
+                <span className="font-bold text-gray-400">0</span>
               </div>
-              <div className="flex flex-col items-center p-2 bg-blue-50 rounded-md">
+              <div className="flex flex-col items-center p-2 bg-gray-50 rounded-md">
                 <span className="text-xs text-muted-foreground">Low</span>
-                <span className="font-bold text-blue-500">2</span>
+                <span className="font-bold text-gray-400">0</span>
               </div>
             </div>
           </CardContent>
           <CardFooter className="pt-2">
-            <Button variant="ghost" size="sm" className="w-full text-xs">View all alerts</Button>
+            <Button variant="ghost" size="sm" className="w-full text-xs" disabled>No alerts to view</Button>
           </CardFooter>
         </Card>
         
-        {/* KYC Status Card */}
+        {/* KYC Status Card - No users verified yet */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">KYC Status</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">94%</div>
-              <div className="flex items-center text-green-600 font-medium text-sm">
-                <ArrowUp className="mr-1 h-4 w-4" />
-                +1.2%
+              <div className="text-2xl font-bold">0%</div>
+              <div className="flex items-center text-muted-foreground font-medium text-sm">
+                <span>No users</span>
               </div>
             </div>
             <div className="mt-3 space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span>Verified</span>
-                <span className="font-medium">245</span>
+                <span className="font-medium">0</span>
               </div>
-              <Progress value={94} className="h-2" />
+              <Progress value={0} className="h-2" />
               <div className="flex items-center justify-between text-sm">
                 <span>Pending</span>
-                <span className="font-medium">16</span>
+                <span className="font-medium">0</span>
               </div>
             </div>
           </CardContent>
           <CardFooter className="pt-2">
-            <Button variant="ghost" size="sm" className="w-full text-xs">View details</Button>
+            <Button variant="ghost" size="sm" className="w-full text-xs" disabled>No KYC data</Button>
           </CardFooter>
         </Card>
         
-        {/* Risk Level Card */}
+        {/* Risk Level Card - Low risk for new system */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Risk Level</CardTitle>
@@ -169,23 +138,22 @@ export default function Dashboard() {
             <div className="flex items-center justify-between">
               <div className="text-2xl font-bold">Low</div>
               <div className="flex items-center text-green-600 font-medium text-sm">
-                <ArrowDown className="mr-1 h-4 w-4" />
-                -8.4%
+                <span>Baseline</span>
               </div>
             </div>
             <div className="flex items-center space-x-2 mt-3">
               <ShieldAlert className="text-green-500 h-5 w-5" />
-              <div className="text-sm">No critical threats detected</div>
+              <div className="text-sm">System ready for monitoring</div>
             </div>
           </CardContent>
           <CardFooter className="pt-2">
-            <p className="text-xs text-muted-foreground">Based on last 30 days of activity</p>
+            <p className="text-xs text-muted-foreground">Start adding transactions to see risk analysis</p>
           </CardFooter>
         </Card>
       </div>
 
       <div className="grid gap-6 md:grid-cols-7">
-        {/* Activity Overview */}
+        {/* Activity Overview - Empty chart */}
         <Card className="md:col-span-4">
           <CardHeader>
             <CardTitle>Activity Overview</CardTitle>
@@ -231,41 +199,54 @@ export default function Dashboard() {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
+            <div className="text-center mt-4">
+              <p className="text-sm text-muted-foreground">No activity recorded yet. Start using the system to see data here.</p>
+            </div>
           </CardContent>
         </Card>
         
-        {/* Recent Alerts */}
+        {/* Recent Alerts - Empty state */}
         <Card className="md:col-span-3">
           <CardHeader>
             <CardTitle>Recent Alerts</CardTitle>
             <CardDescription>Latest compliance and security alerts</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {recentAlerts.map((alert) => (
-                <div key={alert.id} className="flex items-start space-x-3 p-3 rounded-md border bg-card card-hover">
-                  <div className="mt-0.5">
-                    {alert.severity === 'high' ? (
-                      <AlertTriangle className="h-5 w-5 text-red-500" />
-                    ) : (
-                      <Bell className="h-5 w-5 text-amber-500" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="font-medium text-sm">{alert.type}</p>
-                      {getSeverityBadge(alert.severity)}
+            {recentAlerts.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Bell className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No Alerts</h3>
+                <p className="text-muted-foreground text-sm">
+                  All systems are running smoothly. Alerts will appear here when attention is needed.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {recentAlerts.map((alert) => (
+                  <div key={alert.id} className="flex items-start space-x-3 p-3 rounded-md border bg-card card-hover">
+                    <div className="mt-0.5">
+                      {alert.severity === 'high' ? (
+                        <AlertTriangle className="h-5 w-5 text-red-500" />
+                      ) : (
+                        <Bell className="h-5 w-5 text-amber-500" />
+                      )}
                     </div>
-                    <p className="text-sm text-muted-foreground">{alert.description}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{alert.time}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-medium text-sm">{alert.type}</p>
+                        {getSeverityBadge(alert.severity)}
+                      </div>
+                      <p className="text-sm text-muted-foreground">{alert.description}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{alert.time}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </CardContent>
           <CardFooter>
-            <Button variant="outline" size="sm" className="w-full">
-              View all alerts
+            <Button variant="outline" size="sm" className="w-full" disabled={recentAlerts.length === 0}>
+              {recentAlerts.length === 0 ? 'No alerts to view' : 'View all alerts'}
             </Button>
           </CardFooter>
         </Card>
