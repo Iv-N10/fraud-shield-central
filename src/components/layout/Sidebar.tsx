@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -162,12 +163,14 @@ export function AppSidebar() {
           <SidebarMenu>
             {mainNavigationItems.map((item) => (
               <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive(item.path)}>
                   <Link 
                     to={item.path} 
                     className={cn(
-                      "nav-link", 
-                      isActive(item.path) ? "nav-link-active" : "hover:bg-muted/30"
+                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
+                      isActive(item.path) 
+                        ? "bg-primary text-primary-foreground font-medium" 
+                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     )}
                   >
                     {item.icon}
@@ -185,12 +188,14 @@ export function AppSidebar() {
           <SidebarMenu>
             {bankIntegrationItems.map((item) => (
               <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive(item.path)}>
                   <Link 
                     to={item.path} 
                     className={cn(
-                      "nav-link", 
-                      isActive(item.path) ? "nav-link-active" : "hover:bg-muted/30"
+                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
+                      isActive(item.path) 
+                        ? "bg-primary text-primary-foreground font-medium" 
+                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     )}
                   >
                     {item.icon}
@@ -208,12 +213,14 @@ export function AppSidebar() {
           <SidebarMenu>
             {userSectionItems.map((item) => (
               <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive(item.path)}>
                   <Link 
                     to={item.path} 
                     className={cn(
-                      "nav-link", 
-                      isActive(item.path) ? "nav-link-active" : "hover:bg-muted/30"
+                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
+                      isActive(item.path) 
+                        ? "bg-primary text-primary-foreground font-medium" 
+                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     )}
                   >
                     {item.icon}
@@ -231,12 +238,14 @@ export function AppSidebar() {
           <SidebarMenu>
             {settingsItems.map((item) => (
               <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive(item.path)}>
                   <Link 
                     to={item.path} 
                     className={cn(
-                      "nav-link", 
-                      isActive(item.path) ? "nav-link-active" : "hover:bg-muted/30"
+                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
+                      isActive(item.path) 
+                        ? "bg-primary text-primary-foreground font-medium" 
+                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                     )}
                   >
                     {item.icon}
