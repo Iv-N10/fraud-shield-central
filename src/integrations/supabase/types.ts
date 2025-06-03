@@ -9,6 +9,111 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_learning_sessions: {
+        Row: {
+          ai_response: Json
+          created_at: string | null
+          id: string
+          input_data: Json
+          learning_outcome: Json | null
+          performance_impact: Json | null
+          session_duration_ms: number | null
+          session_type: Database["public"]["Enums"]["session_type"]
+        }
+        Insert: {
+          ai_response: Json
+          created_at?: string | null
+          id?: string
+          input_data: Json
+          learning_outcome?: Json | null
+          performance_impact?: Json | null
+          session_duration_ms?: number | null
+          session_type: Database["public"]["Enums"]["session_type"]
+        }
+        Update: {
+          ai_response?: Json
+          created_at?: string | null
+          id?: string
+          input_data?: Json
+          learning_outcome?: Json | null
+          performance_impact?: Json | null
+          session_duration_ms?: number | null
+          session_type?: Database["public"]["Enums"]["session_type"]
+        }
+        Relationships: []
+      }
+      ai_model_metrics: {
+        Row: {
+          accuracy: number
+          created_at: string | null
+          f1_score: number
+          id: string
+          model_type: Database["public"]["Enums"]["model_type"]
+          model_version: string
+          precision_score: number
+          recall_score: number
+          training_data_size: number
+        }
+        Insert: {
+          accuracy: number
+          created_at?: string | null
+          f1_score: number
+          id?: string
+          model_type: Database["public"]["Enums"]["model_type"]
+          model_version: string
+          precision_score: number
+          recall_score: number
+          training_data_size: number
+        }
+        Update: {
+          accuracy?: number
+          created_at?: string | null
+          f1_score?: number
+          id?: string
+          model_type?: Database["public"]["Enums"]["model_type"]
+          model_version?: string
+          precision_score?: number
+          recall_score?: number
+          training_data_size?: number
+        }
+        Relationships: []
+      }
+      fraud_patterns: {
+        Row: {
+          confidence_level: number
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          learned_from: string
+          pattern_data: Json
+          pattern_type: string
+          risk_score: number
+          updated_at: string | null
+        }
+        Insert: {
+          confidence_level: number
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          learned_from: string
+          pattern_data: Json
+          pattern_type: string
+          risk_score: number
+          updated_at?: string | null
+        }
+        Update: {
+          confidence_level?: number
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          learned_from?: string
+          pattern_data?: Json
+          pattern_type?: string
+          risk_score?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       kyc_documents: {
         Row: {
           document_type: string
@@ -48,6 +153,59 @@ export type Database = {
         }
         Relationships: []
       }
+      kyc_verifications: {
+        Row: {
+          ai_confidence: number
+          created_at: string | null
+          document_id: string | null
+          extracted_data: Json | null
+          id: string
+          risk_factors: Json | null
+          updated_at: string | null
+          verification_notes: string | null
+          verification_result: Database["public"]["Enums"]["verification_result"]
+          verification_type: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          ai_confidence: number
+          created_at?: string | null
+          document_id?: string | null
+          extracted_data?: Json | null
+          id?: string
+          risk_factors?: Json | null
+          updated_at?: string | null
+          verification_notes?: string | null
+          verification_result: Database["public"]["Enums"]["verification_result"]
+          verification_type: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          ai_confidence?: number
+          created_at?: string | null
+          document_id?: string | null
+          extracted_data?: Json | null
+          id?: string
+          risk_factors?: Json | null
+          updated_at?: string | null
+          verification_notes?: string | null
+          verification_result?: Database["public"]["Enums"]["verification_result"]
+          verification_type?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kyc_verifications_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "kyc_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -75,6 +233,141 @@ export type Database = {
         }
         Relationships: []
       }
+      security_incidents: {
+        Row: {
+          ai_analysis: Json | null
+          attack_vector: string | null
+          blocked: boolean | null
+          created_at: string | null
+          detected_at: string | null
+          detection_method:
+            | Database["public"]["Enums"]["detection_method"]
+            | null
+          id: string
+          incident_type: Database["public"]["Enums"]["incident_type"]
+          raw_data: Json | null
+          resolution_status:
+            | Database["public"]["Enums"]["resolution_status"]
+            | null
+          resolved_at: string | null
+          severity: Database["public"]["Enums"]["incident_severity"]
+          source_ip: unknown | null
+          target_endpoint: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          ai_analysis?: Json | null
+          attack_vector?: string | null
+          blocked?: boolean | null
+          created_at?: string | null
+          detected_at?: string | null
+          detection_method?:
+            | Database["public"]["Enums"]["detection_method"]
+            | null
+          id?: string
+          incident_type: Database["public"]["Enums"]["incident_type"]
+          raw_data?: Json | null
+          resolution_status?:
+            | Database["public"]["Enums"]["resolution_status"]
+            | null
+          resolved_at?: string | null
+          severity: Database["public"]["Enums"]["incident_severity"]
+          source_ip?: unknown | null
+          target_endpoint?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          ai_analysis?: Json | null
+          attack_vector?: string | null
+          blocked?: boolean | null
+          created_at?: string | null
+          detected_at?: string | null
+          detection_method?:
+            | Database["public"]["Enums"]["detection_method"]
+            | null
+          id?: string
+          incident_type?: Database["public"]["Enums"]["incident_type"]
+          raw_data?: Json | null
+          resolution_status?:
+            | Database["public"]["Enums"]["resolution_status"]
+            | null
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["incident_severity"]
+          source_ip?: unknown | null
+          target_endpoint?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          ai_analysis: Json | null
+          amount: number
+          card_last_four: string | null
+          created_at: string | null
+          currency: string
+          device_fingerprint: string | null
+          fraud_status: Database["public"]["Enums"]["fraud_status"] | null
+          id: string
+          ip_address: unknown | null
+          location_city: string | null
+          location_country: string | null
+          manual_review_notes: string | null
+          merchant_category: string | null
+          merchant_name: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"] | null
+          risk_score: number | null
+          transaction_time: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ai_analysis?: Json | null
+          amount: number
+          card_last_four?: string | null
+          created_at?: string | null
+          currency?: string
+          device_fingerprint?: string | null
+          fraud_status?: Database["public"]["Enums"]["fraud_status"] | null
+          id?: string
+          ip_address?: unknown | null
+          location_city?: string | null
+          location_country?: string | null
+          manual_review_notes?: string | null
+          merchant_category?: string | null
+          merchant_name?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
+          risk_score?: number | null
+          transaction_time?: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ai_analysis?: Json | null
+          amount?: number
+          card_last_four?: string | null
+          created_at?: string | null
+          currency?: string
+          device_fingerprint?: string | null
+          fraud_status?: Database["public"]["Enums"]["fraud_status"] | null
+          id?: string
+          ip_address?: unknown | null
+          location_city?: string | null
+          location_country?: string | null
+          manual_review_notes?: string | null
+          merchant_category?: string | null
+          merchant_name?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
+          risk_score?: number | null
+          transaction_time?: string | null
+          transaction_type?: Database["public"]["Enums"]["transaction_type"]
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -83,7 +376,25 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      detection_method: "ai" | "rule_based" | "manual"
+      fraud_status:
+        | "pending"
+        | "approved"
+        | "flagged"
+        | "blocked"
+        | "confirmed_fraud"
+      incident_severity: "low" | "medium" | "high" | "critical"
+      incident_type: "ddos" | "injection" | "intrusion" | "malware" | "phishing"
+      model_type: "fraud_detection" | "kyc_verification" | "security_analysis"
+      payment_method: "card" | "bank_transfer" | "crypto" | "wallet"
+      resolution_status:
+        | "open"
+        | "investigating"
+        | "resolved"
+        | "false_positive"
+      session_type: "fraud_analysis" | "kyc_processing" | "security_monitoring"
+      transaction_type: "payment" | "transfer" | "withdrawal" | "deposit"
+      verification_result: "passed" | "failed" | "manual_review"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -198,6 +509,28 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      detection_method: ["ai", "rule_based", "manual"],
+      fraud_status: [
+        "pending",
+        "approved",
+        "flagged",
+        "blocked",
+        "confirmed_fraud",
+      ],
+      incident_severity: ["low", "medium", "high", "critical"],
+      incident_type: ["ddos", "injection", "intrusion", "malware", "phishing"],
+      model_type: ["fraud_detection", "kyc_verification", "security_analysis"],
+      payment_method: ["card", "bank_transfer", "crypto", "wallet"],
+      resolution_status: [
+        "open",
+        "investigating",
+        "resolved",
+        "false_positive",
+      ],
+      session_type: ["fraud_analysis", "kyc_processing", "security_monitoring"],
+      transaction_type: ["payment", "transfer", "withdrawal", "deposit"],
+      verification_result: ["passed", "failed", "manual_review"],
+    },
   },
 } as const
