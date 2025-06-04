@@ -24,6 +24,11 @@ import ConnectedBanks from "./pages/Dashboard/ConnectedBanks";
 import NotFound from "./pages/NotFound";
 import Security from "./pages/Dashboard/Security";
 import Activity from "./pages/Dashboard/Activity";
+import BehavioralAnalytics from "./pages/Dashboard/BehavioralAnalytics";
+import PredictiveRiskScoring from "./pages/Dashboard/PredictiveRiskScoring";
+import NaturalLanguageQuery from "./pages/Dashboard/NaturalLanguageQuery";
+import DeviceFingerprinting from "./pages/Dashboard/DeviceFingerprinting";
+import ExecutiveDashboard from "./pages/Dashboard/ExecutiveDashboard";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +46,12 @@ const App = () => (
             
             <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
               <Route path="ai-monitor" element={<AIMonitor />} />
+              <Route path="behavioral-analytics" element={<BehavioralAnalytics />} />
+              <Route path="predictive-risk" element={<PredictiveRiskScoring />} />
+              <Route path="natural-language" element={<NaturalLanguageQuery />} />
+              <Route path="device-fingerprinting" element={<DeviceFingerprinting />} />
               <Route path="activity" element={<Activity />} />
               <Route path="security" element={<Security />} />
               <Route path="kyc" element={<KYC />} />
