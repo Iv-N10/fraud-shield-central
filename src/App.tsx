@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +23,7 @@ import BankIntegration from "./pages/Dashboard/BankIntegration";
 import ConnectedBanks from "./pages/Dashboard/ConnectedBanks";
 import NotFound from "./pages/NotFound";
 import Security from "./pages/Dashboard/Security";
+import Activity from "./pages/Dashboard/Activity";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,7 @@ const App = () => (
             <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="ai-monitor" element={<AIMonitor />} />
+              <Route path="activity" element={<Activity />} />
               <Route path="security" element={<Security />} />
               <Route path="kyc" element={<KYC />} />
               <Route path="transactions" element={<Transactions />} />
