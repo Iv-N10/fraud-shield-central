@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,6 +31,7 @@ import ExecutiveDashboard from "./pages/Dashboard/ExecutiveDashboard";
 import RealTimeMonitoring from "./pages/Dashboard/RealTimeMonitoring";
 import AdvancedIntelligence from "./pages/Dashboard/AdvancedIntelligence";
 import BusinessIntelligence from "./pages/Dashboard/BusinessIntelligence";
+import EnterpriseFeatures from "./pages/Dashboard/EnterpriseFeatures";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +53,7 @@ const App = () => (
               <Route path="real-time-monitoring" element={<RealTimeMonitoring />} />
               <Route path="advanced-intelligence" element={<AdvancedIntelligence />} />
               <Route path="business-intelligence" element={<BusinessIntelligence />} />
+              <Route path="enterprise-features" element={<EnterpriseFeatures />} />
               <Route path="ai-monitor" element={<AIMonitor />} />
               <Route path="behavioral-analytics" element={<BehavioralAnalytics />} />
               <Route path="predictive-risk" element={<PredictiveRiskScoring />} />
