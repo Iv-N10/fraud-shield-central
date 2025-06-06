@@ -1,356 +1,404 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
+  TrendingDown,
   Shield, 
+  DollarSign, 
   Users, 
-  AlertTriangle,
-  Award,
-  Target,
+  Activity,
   BarChart3,
-  Download
+  PieChart,
+  Calendar,
+  Download,
+  Eye,
+  AlertTriangle
 } from 'lucide-react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar
-} from 'recharts';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPieChart, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const monthlyData = [
-  { month: 'Jan', prevented: 125000, losses: 8500, transactions: 2456789, roi: 1400 },
-  { month: 'Feb', prevented: 145000, losses: 7200, transactions: 2678901, roi: 2000 },
-  { month: 'Mar', prevented: 189000, losses: 6800, transactions: 2891234, roi: 2700 },
-  { month: 'Apr', prevented: 167000, losses: 9100, transactions: 2567890, roi: 1800 },
-  { month: 'May', prevented: 234000, losses: 5900, transactions: 3123456, roi: 3900 },
-  { month: 'Jun', prevented: 278000, losses: 4200, transactions: 3345678, roi: 6600 },
-];
+const ExecutiveDashboard = () => {
+  // Mock data for executive dashboard
+  const kpiData = {
+    fraudPrevented: { value: 2847, change: 12.3, trend: 'up' },
+    costSavings: { value: 1250000, change: 8.7, trend: 'up' },
+    falsePositives: { value: 2.1, change: -15.2, trend: 'down' },
+    systemUptime: { value: 99.97, change: 0.02, trend: 'up' }
+  };
 
-const kpiData = [
-  {
-    title: 'Fraud Prevented',
-    value: '$2.3M',
-    change: '+23%',
-    trend: 'up',
-    period: 'vs last quarter',
-    icon: Shield,
-    color: 'text-green-600'
-  },
-  {
-    title: 'ROI from Prevention',
-    value: '1,840%',
-    change: '+156%',
-    trend: 'up',
-    period: 'annualized',
-    icon: TrendingUp,
-    color: 'text-blue-600'
-  },
-  {
-    title: 'False Positive Rate',
-    value: '2.1%',
-    change: '-0.8%',
-    trend: 'down',
-    period: 'vs last month',
-    icon: Target,
-    color: 'text-purple-600'
-  },
-  {
-    title: 'Customer Impact',
-    value: '0.03%',
-    change: '-0.02%',
-    trend: 'down',
-    period: 'friction rate',
-    icon: Users,
-    color: 'text-orange-600'
-  }
-];
+  const monthlyData = [
+    { month: 'Jan', fraudDetected: 245, prevented: 238, savings: 95000 },
+    { month: 'Feb', fraudDetected: 267, prevented: 259, savings: 103000 },
+    { month: 'Mar', fraudDetected: 298, prevented: 287, savings: 115000 },
+    { month: 'Apr', fraudDetected: 321, prevented: 312, savings: 125000 },
+    { month: 'May', fraudDetected: 289, prevented: 281, savings: 112000 },
+    { month: 'Jun', fraudDetected: 356, prevented: 344, savings: 138000 }
+  ];
 
-const complianceMetrics = [
-  { standard: 'PCI DSS', score: 98, status: 'compliant' },
-  { standard: 'AML/KYC', score: 96, status: 'compliant' },
-  { standard: 'GDPR', score: 94, status: 'compliant' },
-  { standard: 'SOX', score: 92, status: 'compliant' },
-];
+  const threatDistribution = [
+    { name: 'Card Fraud', value: 35, color: '#ef4444' },
+    { name: 'Account Takeover', value: 28, color: '#f97316' },
+    { name: 'Money Laundering', value: 20, color: '#eab308' },
+    { name: 'Identity Theft', value: 12, color: '#22c55e' },
+    { name: 'Other', value: 5, color: '#6366f1' }
+  ];
 
-export default function ExecutiveDashboard() {
-  const [selectedPeriod, setSelectedPeriod] = useState('quarterly');
+  const riskTrends = [
+    { date: '2024-01-01', highRisk: 12, mediumRisk: 34, lowRisk: 156 },
+    { date: '2024-01-08', highRisk: 8, mediumRisk: 41, lowRisk: 178 },
+    { date: '2024-01-15', highRisk: 15, mediumRisk: 29, lowRisk: 189 },
+    { date: '2024-01-22', highRisk: 6, mediumRisk: 37, lowRisk: 203 },
+    { date: '2024-01-29', highRisk: 11, mediumRisk: 31, lowRisk: 198 }
+  ];
 
   const getTrendIcon = (trend: string) => {
     return trend === 'up' ? (
-      <TrendingUp className="h-4 w-4 text-green-500" />
+      <TrendingUp className="w-4 h-4 text-green-600" />
     ) : (
-      <TrendingDown className="h-4 w-4 text-green-500" />
+      <TrendingDown className="w-4 h-4 text-red-600" />
     );
   };
 
-  const getComplianceStatus = (score: number) => {
-    if (score >= 95) return { color: 'bg-green-500', text: 'Excellent' };
-    if (score >= 90) return { color: 'bg-blue-500', text: 'Good' };
-    if (score >= 80) return { color: 'bg-amber-500', text: 'Fair' };
-    return { color: 'bg-red-500', text: 'Needs Attention' };
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0
+    }).format(value);
+  };
+
+  const formatNumber = (value: number) => {
+    return new Intl.NumberFormat('en-US').format(value);
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Award className="h-8 w-8" />
-            Executive Dashboard
-          </h1>
-          <p className="text-muted-foreground">Strategic overview of fraud prevention performance and ROI</p>
+          <h1 className="text-3xl font-bold">Executive Dashboard</h1>
+          <p className="text-muted-foreground">
+            High-level overview of fraud prevention performance and ROI
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <Calendar className="w-4 h-4 mr-2" />
+            Last 30 Days
+          </Button>
+          <Button>
             <Download className="w-4 h-4 mr-2" />
             Export Report
           </Button>
-          <Button size="sm">Schedule Reports</Button>
         </div>
       </div>
 
       {/* Key Performance Indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpiData.map((kpi, index) => {
-          const IconComponent = kpi.icon;
-          return (
-            <Card key={index}>
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">{kpi.title}</CardTitle>
-                  <IconComponent className={`h-5 w-5 ${kpi.color}`} />
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Fraud Cases Prevented</CardTitle>
+            <Shield className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatNumber(kpiData.fraudPrevented.value)}</div>
+            <div className="flex items-center text-xs text-muted-foreground">
+              {getTrendIcon(kpiData.fraudPrevented.trend)}
+              <span className={`ml-1 ${kpiData.fraudPrevented.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                {kpiData.fraudPrevented.change}% from last month
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Cost Savings</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(kpiData.costSavings.value)}</div>
+            <div className="flex items-center text-xs text-muted-foreground">
+              {getTrendIcon(kpiData.costSavings.trend)}
+              <span className={`ml-1 ${kpiData.costSavings.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                {kpiData.costSavings.change}% from last month
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">False Positive Rate</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{kpiData.falsePositives.value}%</div>
+            <div className="flex items-center text-xs text-muted-foreground">
+              {getTrendIcon(kpiData.falsePositives.trend)}
+              <span className={`ml-1 ${kpiData.falsePositives.trend === 'down' ? 'text-green-600' : 'text-red-600'}`}>
+                {Math.abs(kpiData.falsePositives.change)}% from last month
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{kpiData.systemUptime.value}%</div>
+            <div className="flex items-center text-xs text-muted-foreground">
+              {getTrendIcon(kpiData.systemUptime.trend)}
+              <span className={`ml-1 ${kpiData.systemUptime.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                {kpiData.systemUptime.change}% from last month
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="performance" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="performance">Performance Overview</TabsTrigger>
+          <TabsTrigger value="threats">Threat Analysis</TabsTrigger>
+          <TabsTrigger value="roi">ROI Analysis</TabsTrigger>
+          <TabsTrigger value="compliance">Compliance Status</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="performance" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Monthly Fraud Prevention</CardTitle>
+                <CardDescription>
+                  Fraud cases detected vs prevented over time
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  <div className="text-2xl font-bold">{kpi.value}</div>
-                  <div className="flex items-center gap-1 text-sm">
-                    {getTrendIcon(kpi.trend)}
-                    <span className="text-green-600 font-medium">{kpi.change}</span>
-                    <span className="text-muted-foreground">{kpi.period}</span>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={monthlyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="fraudDetected" stroke="#ef4444" strokeWidth={2} />
+                    <Line type="monotone" dataKey="prevented" stroke="#22c55e" strokeWidth={2} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Risk Level Trends</CardTitle>
+                <CardDescription>
+                  Distribution of risk levels over time
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={riskTrends}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="highRisk" stackId="1" stroke="#ef4444" fill="#ef4444" />
+                    <Area type="monotone" dataKey="mediumRisk" stackId="1" stroke="#f97316" fill="#f97316" />
+                    <Area type="monotone" dataKey="lowRisk" stackId="1" stroke="#22c55e" fill="#22c55e" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="threats" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Threat Distribution</CardTitle>
+                <CardDescription>
+                  Breakdown of different types of fraud detected
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <RechartsPieChart>
+                    <Pie
+                      data={threatDistribution}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      label
+                    >
+                      {threatDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </RechartsPieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Threat Indicators</CardTitle>
+                <CardDescription>
+                  Most common fraud patterns detected
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  { name: 'Unusual Transaction Velocity', severity: 'high', count: 156 },
+                  { name: 'Suspicious IP Geolocation', severity: 'medium', count: 142 },
+                  { name: 'Device Fingerprint Mismatch', severity: 'medium', count: 98 },
+                  { name: 'Behavioral Pattern Anomaly', severity: 'low', count: 87 },
+                  { name: 'Card Testing Attempts', severity: 'high', count: 76 }
+                ].map((threat, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">{threat.name}</p>
+                      <p className="text-sm text-muted-foreground">{threat.count} instances</p>
+                    </div>
+                    <Badge 
+                      variant={threat.severity === 'high' ? 'destructive' : 
+                              threat.severity === 'medium' ? 'default' : 'secondary'}
+                    >
+                      {threat.severity}
+                    </Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="roi" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Cost Savings by Month</CardTitle>
+                <CardDescription>
+                  Financial impact of fraud prevention
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={monthlyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => formatCurrency(value as number)} />
+                    <Bar dataKey="savings" fill="#22c55e" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>ROI Metrics</CardTitle>
+                <CardDescription>
+                  Return on investment analysis
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Total Investment</span>
+                    <span className="font-medium">{formatCurrency(480000)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Total Savings</span>
+                    <span className="font-medium">{formatCurrency(1250000)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Net Benefit</span>
+                    <span className="font-medium text-green-600">{formatCurrency(770000)}</span>
+                  </div>
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between">
+                      <span className="font-medium">ROI</span>
+                      <span className="font-bold text-green-600">260%</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          );
-        })}
-      </div>
-
-      {/* Financial Impact Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
-        <Card className="lg:col-span-5">
-          <CardHeader>
-            <CardTitle>Financial Impact Trends</CardTitle>
-            <CardDescription>Fraud prevention savings vs actual losses over time</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={monthlyData}>
-                  <defs>
-                    <linearGradient id="colorPrevented" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#22c55e" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#22c55e" stopOpacity={0.2} />
-                    </linearGradient>
-                    <linearGradient id="colorLosses" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0.2} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip 
-                    formatter={(value: any, name: string) => [
-                      `$${(value / 1000).toFixed(0)}K`, 
-                      name === 'prevented' ? 'Fraud Prevented' : 'Actual Losses'
-                    ]}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="prevented" 
-                    stroke="#22c55e" 
-                    fill="url(#colorPrevented)"
-                    name="prevented"
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="losses" 
-                    stroke="#ef4444" 
-                    fill="url(#colorLosses)"
-                    name="losses"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Key Metrics</CardTitle>
-            <CardDescription>Critical performance indicators</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Detection Rate</span>
-                  <span className="text-sm font-bold">98.7%</span>
-                </div>
-                <Progress value={98.7} className="h-2" />
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">System Uptime</span>
-                  <span className="text-sm font-bold">99.99%</span>
-                </div>
-                <Progress value={99.99} className="h-2" />
-              </div>
-              
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Customer Satisfaction</span>
-                  <span className="text-sm font-bold">96.2%</span>
-                </div>
-                <Progress value={96.2} className="h-2" />
-              </div>
-              
-              <div className="pt-4 border-t">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">$45.2M</div>
-                  <p className="text-xs text-muted-foreground">Total Savings YTD</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* ROI Analysis */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Return on Investment Analysis</CardTitle>
-          <CardDescription>FraudShield system ROI compared to investment</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[250px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value: any) => [`${value}%`, 'ROI']}
-                />
-                <Bar 
-                  dataKey="roi" 
-                  fill="#3b82f6" 
-                  radius={[2, 2, 0, 0]}
-                  name="ROI Percentage"
-                />
-              </BarChart>
-            </ResponsiveContainer>
           </div>
-        </CardContent>
-      </Card>
+        </TabsContent>
 
-      {/* Compliance & Risk */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Compliance Status</CardTitle>
-            <CardDescription>Regulatory compliance scores across standards</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {complianceMetrics.map((metric, index) => {
-                const status = getComplianceStatus(metric.score);
-                return (
+        <TabsContent value="compliance" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Compliance Status</CardTitle>
+                <CardDescription>
+                  Current regulatory compliance status
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  { name: 'PCI DSS', status: 'compliant', lastAudit: '2024-01-15' },
+                  { name: 'SOX', status: 'compliant', lastAudit: '2024-01-10' },
+                  { name: 'GDPR', status: 'compliant', lastAudit: '2024-01-20' },
+                  { name: 'PSD2', status: 'compliant', lastAudit: '2024-01-18' },
+                  { name: 'AML/KYC', status: 'compliant', lastAudit: '2024-01-12' }
+                ].map((compliance, index) => (
                   <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${status.color}`}></div>
-                      <span className="font-medium">{metric.standard}</span>
+                    <div>
+                      <p className="font-medium">{compliance.name}</p>
+                      <p className="text-sm text-muted-foreground">Last audit: {compliance.lastAudit}</p>
                     </div>
-                    <div className="text-right">
-                      <div className="font-bold">{metric.score}%</div>
-                      <div className="text-xs text-muted-foreground">{status.text}</div>
-                    </div>
+                    <Badge className="bg-green-100 text-green-600">
+                      {compliance.status}
+                    </Badge>
                   </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </CardContent>
+            </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Risk Assessment Summary</CardTitle>
-            <CardDescription>Current organizational risk profile</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Shield className="h-5 w-5 text-green-600" />
-                  <div>
-                    <p className="font-medium">Overall Risk Level</p>
-                    <p className="text-sm text-muted-foreground">Comprehensive assessment</p>
+            <Card>
+              <CardHeader>
+                <CardTitle>Audit Trail</CardTitle>
+                <CardDescription>
+                  Recent compliance activities
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {[
+                  { date: '2024-01-20', activity: 'GDPR Data Processing Audit Completed', status: 'passed' },
+                  { date: '2024-01-18', activity: 'PSD2 Strong Authentication Review', status: 'passed' },
+                  { date: '2024-01-15', activity: 'PCI DSS Security Scan', status: 'passed' },
+                  { date: '2024-01-12', activity: 'AML Transaction Monitoring Review', status: 'passed' },
+                  { date: '2024-01-10', activity: 'SOX Financial Controls Assessment', status: 'passed' }
+                ].map((audit, index) => (
+                  <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+                    <Eye className="w-4 h-4 text-blue-500 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">{audit.activity}</p>
+                      <p className="text-xs text-muted-foreground">{audit.date}</p>
+                    </div>
+                    <Badge className="bg-green-100 text-green-600">
+                      {audit.status}
+                    </Badge>
                   </div>
-                </div>
-                <Badge variant="outline" className="bg-green-100 text-green-600">Low Risk</Badge>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Users className="h-5 w-5 text-blue-600" />
-                  <div>
-                    <p className="font-medium">Operational Risk</p>
-                    <p className="text-sm text-muted-foreground">Process & system risks</p>
-                  </div>
-                </div>
-                <Badge variant="outline">Minimal</Badge>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-600" />
-                  <div>
-                    <p className="font-medium">Emerging Threats</p>
-                    <p className="text-sm text-muted-foreground">New threat patterns</p>
-                  </div>
-                </div>
-                <Badge variant="default" className="bg-amber-500">Monitoring</Badge>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex items-center gap-3">
-                  <BarChart3 className="h-5 w-5 text-purple-600" />
-                  <div>
-                    <p className="font-medium">Market Risk</p>
-                    <p className="text-sm text-muted-foreground">Industry trends impact</p>
-                  </div>
-                </div>
-                <Badge variant="outline">Stable</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
-}
+};
+
+export default ExecutiveDashboard;
