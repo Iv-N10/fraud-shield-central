@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,21 +18,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { 
   FileText, 
-  User, 
-  Clock, 
   AlertTriangle, 
   CheckCircle, 
-  Plus,
-  Filter,
-  Search,
-  MessageSquare,
-  Calendar
+  Clock,
+  MessageSquare
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import CaseStats from './CaseStats';
+import CaseFilters from './CaseFilters';
 
 interface Case {
   id: string;
@@ -48,14 +43,6 @@ interface Case {
   type: 'fraud' | 'chargeback' | 'suspicious_activity' | 'account_takeover';
   relatedTransactions: number;
   estimatedLoss: number;
-}
-
-interface CaseNote {
-  id: string;
-  caseId: string;
-  author: string;
-  content: string;
-  timestamp: string;
 }
 
 export default function CaseManagementSystem() {
@@ -108,7 +95,6 @@ export default function CaseManagementSystem() {
   const [filterPriority, setFilterPriority] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showNewCaseDialog, setShowNewCaseDialog] = useState(false);
-  const [selectedCase, setSelectedCase] = useState<Case | null>(null);
   const [newCase, setNewCase] = useState({
     title: '',
     description: '',
@@ -218,179 +204,17 @@ export default function CaseManagementSystem() {
 
   return (
     <div className="space-y-6">
-      {/* Case Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Open Cases</p>
-                <p className="text-2xl font-bold text-red-600">{stats.open}</p>
-              </div>
-              <AlertTriangle className="h-8 w-8 text-red-500" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Investigating</p>
-                <p className="text-2xl font-bold text-amber-600">{stats.investigating}</p>
-              </div>
-              <Clock className="h-8 w-8 text-amber-500" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Resolved</p>
-                <p className="text-2xl font-bold text-green-600">{stats.resolved}</p>
-              </div>
-              <CheckCircle className="h-8 w-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Loss</p>
-                <p className="text-2xl font-bold">${stats.totalLoss.toLocaleString()}</p>
-              </div>
-              <FileText className="h-8 w-8 text-muted-foreground" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters and Search */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Search className="h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search cases..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-64"
-              />
-            </div>
-            
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="investigating">Investigating</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select value={filterPriority} onValueChange={setFilterPriority}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Priority</SelectItem>
-                <SelectItem value="critical">Critical</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Dialog open={showNewCaseDialog} onOpenChange={setShowNewCaseDialog}>
-              <DialogTrigger asChild>
-                <Button className="flex items-center gap-2 ml-auto">
-                  <Plus className="h-4 w-4" />
-                  New Case
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Create New Case</DialogTitle>
-                  <DialogDescription>
-                    Create a new investigation case for fraud analysis
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Title</label>
-                    <Input
-                      value={newCase.title}
-                      onChange={(e) => setNewCase(prev => ({ ...prev, title: e.target.value }))}
-                      placeholder="Case title"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Description</label>
-                    <Textarea
-                      value={newCase.description}
-                      onChange={(e) => setNewCase(prev => ({ ...prev, description: e.target.value }))}
-                      placeholder="Detailed case description"
-                      rows={3}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium">Priority</label>
-                      <Select value={newCase.priority} onValueChange={(value) => setNewCase(prev => ({ ...prev, priority: value }))}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                          <SelectItem value="critical">Critical</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Type</label>
-                      <Select value={newCase.type} onValueChange={(value) => setNewCase(prev => ({ ...prev, type: value }))}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="fraud">Fraud</SelectItem>
-                          <SelectItem value="chargeback">Chargeback</SelectItem>
-                          <SelectItem value="suspicious_activity">Suspicious Activity</SelectItem>
-                          <SelectItem value="account_takeover">Account Takeover</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Assignee</label>
-                    <Input
-                      value={newCase.assignee}
-                      onChange={(e) => setNewCase(prev => ({ ...prev, assignee: e.target.value }))}
-                      placeholder="Assign to team member"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setShowNewCaseDialog(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={createNewCase}>Create Case</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardContent>
-      </Card>
+      <CaseStats stats={stats} />
+      
+      <CaseFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filterStatus={filterStatus}
+        setFilterStatus={setFilterStatus}
+        filterPriority={filterPriority}
+        setFilterPriority={setFilterPriority}
+        onNewCase={() => setShowNewCaseDialog(true)}
+      />
 
       {/* Cases List */}
       <Card>
@@ -478,6 +302,81 @@ export default function CaseManagementSystem() {
           </div>
         </CardContent>
       </Card>
+
+      {/* New Case Dialog */}
+      <Dialog open={showNewCaseDialog} onOpenChange={setShowNewCaseDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Case</DialogTitle>
+            <DialogDescription>
+              Create a new investigation case for fraud analysis
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Title</label>
+              <Input
+                value={newCase.title}
+                onChange={(e) => setNewCase(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Case title"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Description</label>
+              <Textarea
+                value={newCase.description}
+                onChange={(e) => setNewCase(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Detailed case description"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium">Priority</label>
+                <Select value={newCase.priority} onValueChange={(value) => setNewCase(prev => ({ ...prev, priority: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="critical">Critical</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Type</label>
+                <Select value={newCase.type} onValueChange={(value) => setNewCase(prev => ({ ...prev, type: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fraud">Fraud</SelectItem>
+                    <SelectItem value="chargeback">Chargeback</SelectItem>
+                    <SelectItem value="suspicious_activity">Suspicious Activity</SelectItem>
+                    <SelectItem value="account_takeover">Account Takeover</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Assignee</label>
+              <Input
+                value={newCase.assignee}
+                onChange={(e) => setNewCase(prev => ({ ...prev, assignee: e.target.value }))}
+                placeholder="Assign to team member"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNewCaseDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={createNewCase}>Create Case</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

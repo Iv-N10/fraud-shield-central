@@ -31,6 +31,7 @@ import DeviceFingerprinting from "./pages/Dashboard/DeviceFingerprinting";
 import ExecutiveDashboard from "./pages/Dashboard/ExecutiveDashboard";
 import RealTimeMonitoring from "./pages/Dashboard/RealTimeMonitoring";
 import AdvancedIntelligence from "./pages/Dashboard/AdvancedIntelligence";
+import BusinessIntelligence from "./pages/Dashboard/BusinessIntelligence";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
               <Route path="real-time-monitoring" element={<RealTimeMonitoring />} />
               <Route path="advanced-intelligence" element={<AdvancedIntelligence />} />
+              <Route path="business-intelligence" element={<BusinessIntelligence />} />
               <Route path="ai-monitor" element={<AIMonitor />} />
               <Route path="behavioral-analytics" element={<BehavioralAnalytics />} />
               <Route path="predictive-risk" element={<PredictiveRiskScoring />} />
