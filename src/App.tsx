@@ -35,6 +35,7 @@ import AdvancedIntelligence from "./pages/Dashboard/AdvancedIntelligence";
 import BusinessIntelligence from "./pages/Dashboard/BusinessIntelligence";
 import EnterpriseFeatures from "./pages/Dashboard/EnterpriseFeatures";
 import LegalCompliance from "./pages/Dashboard/LegalCompliance";
+import QuantumReadyTech from "./pages/Dashboard/QuantumReadyTech";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ const App: React.FC = () => {
                 <Route path="advanced-intelligence" element={<AdvancedIntelligence />} />
                 <Route path="business-intelligence" element={<BusinessIntelligence />} />
                 <Route path="enterprise-features" element={<EnterpriseFeatures />} />
+                <Route path="quantum-ready-tech" element={<QuantumReadyTech />} />
                 <Route path="ai-monitor" element={<AIMonitor />} />
                 <Route path="behavioral-analytics" element={<BehavioralAnalytics />} />
                 <Route path="predictive-risk" element={<PredictiveRiskScoring />} />

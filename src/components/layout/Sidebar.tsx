@@ -15,7 +15,8 @@ import {
   Building2,
   Plug,
   Shield,
-  Scale
+  Scale,
+  Zap
 } from 'lucide-react';
 import {
   Sidebar,
@@ -60,6 +61,11 @@ export function AppSidebar() {
       title: 'Legal Compliance', 
       icon: <Scale size={20} />, 
       path: '/legal-compliance' 
+    },
+    { 
+      title: 'Quantum-Ready Tech', 
+      icon: <Zap size={20} />, 
+      path: '/quantum-ready-tech' 
     },
     { 
       title: 'KYC Verification', 
