@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -15,7 +14,8 @@ import {
   Receipt,
   Building2,
   Plug,
-  Shield
+  Shield,
+  Scale
 } from 'lucide-react';
 import {
   Sidebar,
@@ -55,6 +55,11 @@ export function AppSidebar() {
       title: 'Security Center', 
       icon: <Shield size={20} />, 
       path: '/security' 
+    },
+    { 
+      title: 'Legal Compliance', 
+      icon: <Scale size={20} />, 
+      path: '/legal-compliance' 
     },
     { 
       title: 'KYC Verification', 
