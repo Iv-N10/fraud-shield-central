@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,6 +33,7 @@ import RealTimeMonitoring from "./pages/Dashboard/RealTimeMonitoring";
 import AdvancedIntelligence from "./pages/Dashboard/AdvancedIntelligence";
 import BusinessIntelligence from "./pages/Dashboard/BusinessIntelligence";
 import EnterpriseFeatures from "./pages/Dashboard/EnterpriseFeatures";
+import LegalCompliance from "./pages/Dashboard/LegalCompliance";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,7 @@ const App = () => (
               <Route path="device-fingerprinting" element={<DeviceFingerprinting />} />
               <Route path="activity" element={<Activity />} />
               <Route path="security" element={<Security />} />
+              <Route path="legal-compliance" element={<LegalCompliance />} />
               <Route path="kyc" element={<KYC />} />
               <Route path="transactions" element={<Transactions />} />
               <Route path="reports" element={<Reports />} />

@@ -5,7 +5,8 @@ import LegalManual from '@/components/legal/LegalManual';
 import ComplianceMonitor from '@/components/legal/ComplianceMonitor';
 import LegalDocumentation from '@/components/legal/LegalDocumentation';
 import RiskAssessment from '@/components/legal/RiskAssessment';
-import { Book, Shield, FileText, AlertTriangle } from 'lucide-react';
+import LegalLawsBooks from '@/components/legal/LegalLawsBooks';
+import { Book, Shield, FileText, AlertTriangle, Scale } from 'lucide-react';
 
 export default function LegalCompliance() {
   return (
@@ -21,10 +22,14 @@ export default function LegalCompliance() {
       </div>
 
       <Tabs defaultValue="manual" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="manual" className="flex items-center gap-2">
             <Book className="h-4 w-4" />
             Legal Manual
+          </TabsTrigger>
+          <TabsTrigger value="laws" className="flex items-center gap-2">
+            <Scale className="h-4 w-4" />
+            Laws & Books
           </TabsTrigger>
           <TabsTrigger value="monitor" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
@@ -42,6 +47,10 @@ export default function LegalCompliance() {
 
         <TabsContent value="manual" className="space-y-6">
           <LegalManual />
+        </TabsContent>
+
+        <TabsContent value="laws" className="space-y-6">
+          <LegalLawsBooks />
         </TabsContent>
 
         <TabsContent value="monitor" className="space-y-6">
