@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -37,50 +38,52 @@ import LegalCompliance from "./pages/Dashboard/LegalCompliance";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            
-            <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
-              <Route path="real-time-monitoring" element={<RealTimeMonitoring />} />
-              <Route path="advanced-intelligence" element={<AdvancedIntelligence />} />
-              <Route path="business-intelligence" element={<BusinessIntelligence />} />
-              <Route path="enterprise-features" element={<EnterpriseFeatures />} />
-              <Route path="ai-monitor" element={<AIMonitor />} />
-              <Route path="behavioral-analytics" element={<BehavioralAnalytics />} />
-              <Route path="predictive-risk" element={<PredictiveRiskScoring />} />
-              <Route path="natural-language" element={<NaturalLanguageQuery />} />
-              <Route path="device-fingerprinting" element={<DeviceFingerprinting />} />
-              <Route path="activity" element={<Activity />} />
-              <Route path="security" element={<Security />} />
-              <Route path="legal-compliance" element={<LegalCompliance />} />
-              <Route path="kyc" element={<KYC />} />
-              <Route path="transactions" element={<Transactions />} />
-              <Route path="reports" element={<Reports />} />
-              <Route path="ai-assistant" element={<AIAssistant />} />
-              <Route path="payments" element={<Payments />} />
-              <Route path="my-transactions" element={<MyTransactions />} />
-              <Route path="bank-integration" element={<BankIntegration />} />
-              <Route path="connected-banks" element={<ConnectedBanks />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App: React.FC = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              
+              <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
+                <Route path="real-time-monitoring" element={<RealTimeMonitoring />} />
+                <Route path="advanced-intelligence" element={<AdvancedIntelligence />} />
+                <Route path="business-intelligence" element={<BusinessIntelligence />} />
+                <Route path="enterprise-features" element={<EnterpriseFeatures />} />
+                <Route path="ai-monitor" element={<AIMonitor />} />
+                <Route path="behavioral-analytics" element={<BehavioralAnalytics />} />
+                <Route path="predictive-risk" element={<PredictiveRiskScoring />} />
+                <Route path="natural-language" element={<NaturalLanguageQuery />} />
+                <Route path="device-fingerprinting" element={<DeviceFingerprinting />} />
+                <Route path="activity" element={<Activity />} />
+                <Route path="security" element={<Security />} />
+                <Route path="legal-compliance" element={<LegalCompliance />} />
+                <Route path="kyc" element={<KYC />} />
+                <Route path="transactions" element={<Transactions />} />
+                <Route path="reports" element={<Reports />} />
+                <Route path="ai-assistant" element={<AIAssistant />} />
+                <Route path="payments" element={<Payments />} />
+                <Route path="my-transactions" element={<MyTransactions />} />
+                <Route path="bank-integration" element={<BankIntegration />} />
+                <Route path="connected-banks" element={<ConnectedBanks />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
