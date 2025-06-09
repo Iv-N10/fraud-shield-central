@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -32,6 +31,7 @@ import DeviceFingerprinting from "./pages/Dashboard/DeviceFingerprinting";
 import ExecutiveDashboard from "./pages/Dashboard/ExecutiveDashboard";
 import RealTimeMonitoring from "./pages/Dashboard/RealTimeMonitoring";
 import AdvancedIntelligence from "./pages/Dashboard/AdvancedIntelligence";
+import AdvancedInvestigation from "./pages/Dashboard/AdvancedInvestigation";
 import BusinessIntelligence from "./pages/Dashboard/BusinessIntelligence";
 import EnterpriseFeatures from "./pages/Dashboard/EnterpriseFeatures";
 import LegalCompliance from "./pages/Dashboard/LegalCompliance";
@@ -57,6 +57,7 @@ const App: React.FC = () => {
                 <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
                 <Route path="real-time-monitoring" element={<RealTimeMonitoring />} />
                 <Route path="advanced-intelligence" element={<AdvancedIntelligence />} />
+                <Route path="advanced-investigation" element={<AdvancedInvestigation />} />
                 <Route path="business-intelligence" element={<BusinessIntelligence />} />
                 <Route path="enterprise-features" element={<EnterpriseFeatures />} />
                 <Route path="quantum-ready-tech" element={<QuantumReadyTech />} />

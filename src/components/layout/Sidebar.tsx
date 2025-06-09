@@ -1,290 +1,132 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  ChevronDown,
-  ChevronUp, 
-  BarChart2,
-  UserCheck,
-  Settings,
-  FileText,
-  Home,
-  Activity,
-  Brain,
-  CreditCard,
-  Receipt,
-  Building2,
-  Plug,
-  Shield,
-  Scale,
-  Zap
-} from 'lucide-react';
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroupLabel
-} from "@/components/ui/sidebar";
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Separator } from "@/components/ui/separator"
+import {
+  BarChart3,
+  Building2,
+  CreditCard,
+  File,
+  FileText,
+  Settings,
+  User,
+  Users,
+  Brain,
+  Shield,
+  Activity,
+  LayoutDashboard,
+  Zap,
+  Crown,
+  Search
+} from "lucide-react"
+import { NavItem } from "@/types"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom";
 
-export function AppSidebar() {
-  const location = useLocation();
-  const [collapsed, setCollapsed] = React.useState(false);
+interface SidebarProps {
+  isMobile: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const mainNavigationItems = [
-    { 
-      title: 'Dashboard', 
-      icon: <Home size={20} />, 
-      path: '/dashboard' 
-    },
-    { 
-      title: 'Activity', 
-      icon: <Activity size={20} />, 
-      path: '/activity' 
-    },
-    { 
-      title: 'Real-Time Monitor', 
-      icon: <BarChart2 size={20} />, 
-      path: '/real-time-monitoring' 
-    },
-    { 
-      title: 'Advanced Intelligence', 
-      icon: <Brain size={20} />, 
-      path: '/advanced-intelligence' 
-    },
-    { 
-      title: 'AI Monitor', 
-      icon: <Brain size={20} />, 
-      path: '/ai-monitor' 
-    },
-    { 
-      title: 'Security Center', 
-      icon: <Shield size={20} />, 
-      path: '/security' 
-    },
-    { 
-      title: 'Legal Compliance', 
-      icon: <Scale size={20} />, 
-      path: '/legal-compliance' 
-    },
-    { 
-      title: 'Quantum-Ready Tech', 
-      icon: <Zap size={20} />, 
-      path: '/quantum-ready-tech' 
-    },
-    { 
-      title: 'KYC Verification', 
-      icon: <UserCheck size={20} />, 
-      path: '/kyc' 
-    },
-    { 
-      title: 'Transaction Monitoring', 
-      icon: <BarChart2 size={20} />, 
-      path: '/transactions' 
-    },
-    { 
-      title: 'Risk Reports', 
-      icon: <FileText size={20} />, 
-      path: '/reports' 
-    },
-    { 
-      title: 'AI Assistant', 
-      icon: <Brain size={20} />, 
-      path: '/ai-assistant' 
-    }
-  ];
-
-  const bankIntegrationItems = [
+const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, onClose }) => {
+  const navigationItems = [
     {
-      title: 'System Integration',
-      icon: <Plug size={20} />,
-      path: '/bank-integration'
+      title: "Main",
+      items: [
+        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      ]
     },
     {
-      title: 'Connected Banks',
-      icon: <Building2 size={20} />,
-      path: '/connected-banks'
-    }
-  ];
-
-  const userSectionItems = [
-    {
-      title: 'Payments',
-      icon: <CreditCard size={20} />,
-      path: '/payments'
+      title: "Core Features",
+      items: [
+        { name: "KYC", href: "/kyc", icon: User },
+        { name: "Transactions", href: "/transactions", icon: CreditCard },
+        { name: "Reports", href: "/reports", icon: FileText },
+      ]
     },
     {
-      title: 'My Transactions',
-      icon: <Receipt size={20} />,
-      path: '/my-transactions'
-    }
+      title: "AI & Analytics",
+      items: [
+        { name: "AI Monitor", href: "/ai-monitor", icon: Shield },
+        { name: "Behavioral Analytics", href: "/behavioral-analytics", icon: Users },
+        { name: "Predictive Risk", href: "/predictive-risk", icon: AlertTriangle },
+        { name: "Natural Language", href: "/natural-language", icon: File },
+        { name: "Device Fingerprinting", href: "/device-fingerprinting", icon: Settings },
+      ]
+    },
+    {
+      title: "Advanced Features",
+      items: [
+        { name: "Executive Dashboard", href: "/executive-dashboard", icon: Crown },
+        { name: "Real-time Monitoring", href: "/real-time-monitoring", icon: Activity },
+        { name: "Advanced Intelligence", href: "/advanced-intelligence", icon: Brain },
+        { name: "Advanced Investigation", href: "/advanced-investigation", icon: Search },
+        { name: "Business Intelligence", href: "/business-intelligence", icon: BarChart3 },
+        { name: "Enterprise Features", href: "/enterprise-features", icon: Building2 },
+        { name: "Quantum-Ready Tech", href: "/quantum-ready-tech", icon: Zap },
+      ]
+    },
+    {
+      title: "My Account",
+      items: [
+        { name: "Payments", href: "/payments", icon: CreditCard },
+        { name: "My Transactions", href: "/my-transactions", icon: CreditCard },
+        { name: "Bank Integration", href: "/bank-integration", icon: CreditCard },
+        { name: "Connected Banks", href: "/connected-banks", icon: CreditCard },
+        { name: "Settings", href: "/settings", icon: Settings },
+      ]
+    },
   ];
 
-  const settingsItems = [
-    { 
-      title: 'Settings', 
-      icon: <Settings size={20} />, 
-      path: '/settings' 
-    }
-  ];
+  const renderSidebarContent = () => (
+    <div className="flex flex-col h-full">
+      <div className="px-6 py-4">
+        <Link to="/dashboard" className="font-bold text-xl">
+          FraudShield
+        </Link>
+      </div>
+      <Separator />
+      <div className="flex-1 overflow-y-auto py-4">
+        {navigationItems.map((section, index) => (
+          <div key={index} className="space-y-1">
+            <div className="px-6 text-sm font-medium text-muted-foreground">
+              {section.title}
+            </div>
+            {section.items.map((item: NavItem) => (
+              <Link to={item.href} key={item.name} className="flex items-center space-x-2 px-6 py-2 text-sm font-medium hover:underline">
+                <item.icon className="h-4 w-4" />
+                <span>{item.name}</span>
+              </Link>
+            ))}
+            <Separator />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
-  const isActive = (path: string) => {
-    return location.pathname === path || location.pathname.startsWith(`${path}/`);
-  };
+  if (!isMobile) {
+    return (
+      <div className="hidden md:block w-64 border-r flex-shrink-0">
+        {renderSidebarContent()}
+      </div>
+    );
+  }
 
   return (
-    <Sidebar className={cn("border-r border-border h-screen", 
-      collapsed ? "w-[70px]" : "w-[240px]",
-      "transition-all duration-300 ease-in-out"
-    )}>
-      <SidebarHeader className="p-4 flex justify-between items-center">
-        <div className={cn("flex items-center", collapsed ? "justify-center w-full" : "")}>
-          {!collapsed && (
-            <Link to="/dashboard" className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground font-bold text-lg">FS</div>
-              <span className="font-bold text-lg">FraudShield</span>
-            </Link>
-          )}
-          {collapsed && (
-            <Link to="/dashboard" className="flex items-center justify-center">
-              <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground font-bold text-lg">FS</div>
-            </Link>
-          )}
-        </div>
-        <Button 
-          variant="ghost" 
-          size="icon"
-          className={collapsed ? "hidden" : ""}
-          onClick={() => setCollapsed(true)}
-          aria-label="Collapse sidebar"
-        >
-          <ChevronDown size={18} />
-        </Button>
-        {collapsed && (
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="absolute right-2 top-4"
-            onClick={() => setCollapsed(false)}
-            aria-label="Expand sidebar"
-          >
-            <ChevronUp size={18} />
-          </Button>
-        )}
-      </SidebarHeader>
-      <SidebarContent>
-        {/* Main Navigation */}
-        <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel>Main</SidebarGroupLabel>}
-          <SidebarMenu>
-            {mainNavigationItems.map((item) => (
-              <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                  <Link 
-                    to={item.path} 
-                    className={cn(
-                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
-                      isActive(item.path) 
-                        ? "bg-primary text-primary-foreground font-medium" 
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    )}
-                  >
-                    {item.icon}
-                    {!collapsed && <span>{item.title}</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        {/* Bank Integration */}
-        <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel>Bank Integration</SidebarGroupLabel>}
-          <SidebarMenu>
-            {bankIntegrationItems.map((item) => (
-              <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                  <Link 
-                    to={item.path} 
-                    className={cn(
-                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
-                      isActive(item.path) 
-                        ? "bg-primary text-primary-foreground font-medium" 
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    )}
-                  >
-                    {item.icon}
-                    {!collapsed && <span>{item.title}</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        {/* User Section */}
-        <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel>User</SidebarGroupLabel>}
-          <SidebarMenu>
-            {userSectionItems.map((item) => (
-              <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                  <Link 
-                    to={item.path} 
-                    className={cn(
-                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
-                      isActive(item.path) 
-                        ? "bg-primary text-primary-foreground font-medium" 
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    )}
-                  >
-                    {item.icon}
-                    {!collapsed && <span>{item.title}</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        {/* Settings */}
-        <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel>System</SidebarGroupLabel>}
-          <SidebarMenu>
-            {settingsItems.map((item) => (
-              <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton asChild isActive={isActive(item.path)}>
-                  <Link 
-                    to={item.path} 
-                    className={cn(
-                      "flex items-center gap-2 p-2 rounded-md transition-colors w-full",
-                      isActive(item.path) 
-                        ? "bg-primary text-primary-foreground font-medium" 
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                    )}
-                  >
-                    {item.icon}
-                    {!collapsed && <span>{item.title}</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter className="p-4">
-        {!collapsed && (
-          <div className="text-xs text-muted-foreground">
-            FraudShield Central v1.0
-          </div>
-        )}
-      </SidebarFooter>
-    </Sidebar>
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent side="left" className="w-64 p-0">
+        {renderSidebarContent()}
+      </SheetContent>
+    </Sheet>
   );
-}
+};
+
+export default Sidebar;
