@@ -48,6 +48,16 @@ export function AppSidebar() {
       path: '/activity' 
     },
     { 
+      title: 'Real-Time Monitor', 
+      icon: <BarChart2 size={20} />, 
+      path: '/real-time-monitoring' 
+    },
+    { 
+      title: 'Advanced Intelligence', 
+      icon: <Brain size={20} />, 
+      path: '/advanced-intelligence' 
+    },
+    { 
       title: 'AI Monitor', 
       icon: <Brain size={20} />, 
       path: '/ai-monitor' 

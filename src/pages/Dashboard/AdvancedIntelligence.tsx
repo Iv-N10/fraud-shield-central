@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import IPReputationScoring from '@/components/security/IPReputationScoring';
-import VelocityFraudDetection from '@/components/security/VelocityFraudDetection';
-import CaseManagementSystem from '@/components/case-management/CaseManagementSystem';
-import ExplainableAI from '@/components/ai/ExplainableAI';
-import { Brain, Shield, Zap, FileText } from 'lucide-react';
+import GraphNeuralNetworks from '@/components/ai/GraphNeuralNetworks';
+import BehavioralBiometrics from '@/components/biometric/BehavioralBiometrics';
+import SyntheticDataDetection from '@/components/ai/SyntheticDataDetection';
+import CrossPlatformIntelligence from '@/components/intelligence/CrossPlatformIntelligence';
+import RealTimeDeepLearning from '@/components/ai/RealTimeDeepLearning';
+import { Brain, Network, Users, Database, Zap } from 'lucide-react';
 
 export default function AdvancedIntelligence() {
   return (
@@ -13,47 +14,55 @@ export default function AdvancedIntelligence() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Brain className="h-8 w-8" />
-          Advanced Intelligence
+          Advanced AI & Intelligence
         </h1>
         <p className="text-muted-foreground">
-          Advanced fraud detection intelligence with IP reputation, velocity analysis, case management, and explainable AI
+          Next-generation fraud detection with graph neural networks, behavioral analysis, and real-time learning systems
         </p>
       </div>
 
-      <Tabs defaultValue="ip-reputation" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="ip-reputation" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            IP Reputation
+      <Tabs defaultValue="graph" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="graph" className="flex items-center gap-2">
+            <Network className="h-4 w-4" />
+            Graph Networks
           </TabsTrigger>
-          <TabsTrigger value="velocity" className="flex items-center gap-2">
-            <Zap className="h-4 w-4" />
-            Velocity Detection
+          <TabsTrigger value="behavioral" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Behavioral Bio
           </TabsTrigger>
-          <TabsTrigger value="case-management" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Case Management
+          <TabsTrigger value="synthetic" className="flex items-center gap-2">
+            <Database className="h-4 w-4" />
+            Synthetic Detection
           </TabsTrigger>
-          <TabsTrigger value="explainable-ai" className="flex items-center gap-2">
+          <TabsTrigger value="crossplatform" className="flex items-center gap-2">
             <Brain className="h-4 w-4" />
-            Explainable AI
+            Cross-Platform
+          </TabsTrigger>
+          <TabsTrigger value="realtime" className="flex items-center gap-2">
+            <Zap className="h-4 w-4" />
+            Real-time ML
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="ip-reputation" className="space-y-6">
-          <IPReputationScoring />
+        <TabsContent value="graph" className="space-y-6">
+          <GraphNeuralNetworks />
         </TabsContent>
 
-        <TabsContent value="velocity" className="space-y-6">
-          <VelocityFraudDetection />
+        <TabsContent value="behavioral" className="space-y-6">
+          <BehavioralBiometrics />
         </TabsContent>
 
-        <TabsContent value="case-management" className="space-y-6">
-          <CaseManagementSystem />
+        <TabsContent value="synthetic" className="space-y-6">
+          <SyntheticDataDetection />
         </TabsContent>
 
-        <TabsContent value="explainable-ai" className="space-y-6">
-          <ExplainableAI />
+        <TabsContent value="crossplatform" className="space-y-6">
+          <CrossPlatformIntelligence />
+        </TabsContent>
+
+        <TabsContent value="realtime" className="space-y-6">
+          <RealTimeDeepLearning />
         </TabsContent>
       </Tabs>
     </div>
