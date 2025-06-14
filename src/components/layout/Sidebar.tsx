@@ -31,8 +31,7 @@ import {
   ShieldCheck,
   Target,
   BookOpen,
-  MessageSquare,
-  Quantum
+  MessageSquare
 } from 'lucide-react';
 
 const Sidebar = () => {
