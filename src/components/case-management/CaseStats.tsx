@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { AlertTriangle, Clock, CheckCircle, FileText } from 'lucide-react';
+import { FileText, AlertTriangle, CheckCircle, DollarSign } from 'lucide-react';
 
 interface CaseStatsProps {
   stats: {
@@ -26,7 +26,7 @@ export default function CaseStats({ stats }: CaseStatsProps) {
           </div>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
@@ -34,11 +34,11 @@ export default function CaseStats({ stats }: CaseStatsProps) {
               <p className="text-sm text-muted-foreground">Investigating</p>
               <p className="text-2xl font-bold text-amber-600">{stats.investigating}</p>
             </div>
-            <Clock className="h-8 w-8 text-amber-500" />
+            <FileText className="h-8 w-8 text-amber-500" />
           </div>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
@@ -50,15 +50,15 @@ export default function CaseStats({ stats }: CaseStatsProps) {
           </div>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-muted-foreground">Total Loss</p>
-              <p className="text-2xl font-bold">${stats.totalLoss.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-purple-600">${stats.totalLoss.toLocaleString()}</p>
             </div>
-            <FileText className="h-8 w-8 text-muted-foreground" />
+            <DollarSign className="h-8 w-8 text-purple-500" />
           </div>
         </CardContent>
       </Card>

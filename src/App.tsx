@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
@@ -37,6 +36,7 @@ import LegalCompliance from '@/pages/Dashboard/LegalCompliance';
 import NaturalLanguageQuery from '@/pages/Dashboard/NaturalLanguageQuery';
 import QuantumReadyTech from '@/pages/Dashboard/QuantumReadyTech';
 import NotFound from '@/pages/NotFound';
+import CaseManagement from '@/pages/Dashboard/CaseManagement';
 
 const queryClient = new QueryClient();
 
@@ -63,6 +63,7 @@ function App() {
               <Route path="enhanced-security" element={<EnhancedSecurity />} />
               <Route path="behavioral-analytics" element={<BehavioralAnalytics />} />
               <Route path="behavioral-biometrics" element={<BehavioralAnalytics />} />
+              <Route path="case-management" element={<CaseManagement />} />
               <Route path="reports" element={<Reports />} />
               <Route path="settings" element={<Settings />} />
               <Route path="kyc" element={<KYC />} />
