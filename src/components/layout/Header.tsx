@@ -4,6 +4,7 @@ import { Bell, Settings, Menu, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSidebar } from '@/components/ui/sidebar';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -17,6 +18,7 @@ import {
 export function Header() {
   const { toggleSidebar } = useSidebar();
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   
   // Extract initials from user's name or email
   const getUserInitials = () => {
@@ -31,6 +33,10 @@ export function Header() {
     }
     
     return user.email?.[0].toUpperCase() || 'U';
+  };
+
+  const handleSettingsClick = () => {
+    navigate('/dashboard/settings');
   };
 
   return (
@@ -67,7 +73,7 @@ export function Header() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
+            <DropdownMenuItem onClick={handleSettingsClick}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
