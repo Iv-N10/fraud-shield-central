@@ -36,6 +36,7 @@ export function Header() {
   };
 
   const handleSettingsClick = () => {
+    console.log('Settings clicked, navigating to /dashboard/settings');
     navigate('/dashboard/settings');
   };
 
