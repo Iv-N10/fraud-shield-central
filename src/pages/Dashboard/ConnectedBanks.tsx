@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,32 +32,78 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const ConnectedBanks = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBank, setSelectedBank] = useState<any>(null);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   // Fetch real bank connection data from the database
-  const { data: bankConnections = [], isLoading } = useQuery({
+  const { data: bankConnections = [], isLoading, refetch } = useQuery({
     queryKey: ['bankConnections'],
     queryFn: async () => {
       console.log('Fetching bank connections...');
-      // For now, return empty array since we don't have real bank connection data yet
-      // This will be populated when banks actually connect to the system
-      return [];
+      const { data, error } = await supabase
+        .from('bank_connections')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching bank connections:', error);
+        throw error;
+      }
+      
+      return data || [];
     },
     refetchInterval: 30000,
   });
+
+  // Real-time subscription for bank connections
+  useEffect(() => {
+    console.log('Setting up real-time subscription for bank connections...');
+    const channel = supabase
+      .channel('bank_connections_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bank_connections'
+        },
+        (payload) => {
+          console.log('Bank connection changed:', payload);
+          queryClient.invalidateQueries({ queryKey: ['bankConnections'] });
+          queryClient.invalidateQueries({ queryKey: ['bankMetrics'] });
+          
+          if (payload.eventType === 'INSERT') {
+            toast({
+              title: "New Bank Connected",
+              description: `${payload.new.bank_name} has been successfully connected.`,
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            toast({
+              title: "Bank Connection Updated",
+              description: `${payload.new.bank_name} connection status updated.`,
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient, toast]);
 
   // Fetch transaction metrics from real data
   const { data: metrics } = useQuery({
     queryKey: ['bankMetrics'],
     queryFn: async () => {
       const { data: transactions } = await supabase
-        .from('transactions')
+        .from('bank_transaction_feed')
         .select('*')
         .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
 
@@ -78,8 +124,35 @@ const ConnectedBanks = () => {
     },
   });
 
+  // Disconnect bank mutation
+  const disconnectBankMutation = useMutation({
+    mutationFn: async (bankId: string) => {
+      const { error } = await supabase
+        .from('bank_connections')
+        .delete()
+        .eq('id', bankId);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bankConnections'] });
+      toast({
+        title: "Bank Disconnected",
+        description: "The bank has been successfully disconnected from FraudShield.",
+      });
+    },
+    onError: (error) => {
+      console.error('Error disconnecting bank:', error);
+      toast({
+        title: "Error",
+        description: "Failed to disconnect bank. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const filteredBanks = bankConnections.filter((bank: any) =>
-    bank.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    bank.bank_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleViewDetails = (bank: any) => {
@@ -88,10 +161,7 @@ const ConnectedBanks = () => {
   };
 
   const handleDisconnectBank = (bankId: string) => {
-    toast({
-      title: "Bank Disconnected",
-      description: "The bank has been successfully disconnected from FraudShield.",
-    });
+    disconnectBankMutation.mutate(bankId);
   };
 
   if (isLoading) {
@@ -212,15 +282,24 @@ const ConnectedBanks = () => {
                           <Building2 className="h-6 w-6 text-blue-600" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-lg">{bank.name}</h3>
+                          <h3 className="font-semibold text-lg">{bank.bank_name}</h3>
                           <p className="text-sm text-muted-foreground">
                             Connected via {bank.integration_type} • {new Date(bank.connected_at).toLocaleDateString()}
                           </p>
+                          {bank.last_sync_at && (
+                            <p className="text-xs text-muted-foreground">
+                              Last sync: {new Date(bank.last_sync_at).toLocaleString()}
+                            </p>
+                          )}
                         </div>
                       </div>
                       
                       <div className="flex items-center space-x-4">
-                        <Badge className={bank.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}>
+                        <Badge className={
+                          bank.status === 'active' ? 'bg-green-100 text-green-600' : 
+                          bank.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
+                          'bg-red-100 text-red-600'
+                        }>
                           {bank.status}
                         </Badge>
                         
@@ -264,7 +343,7 @@ const ConnectedBanks = () => {
           <DialogHeader>
             <DialogTitle>Bank Connection Details</DialogTitle>
             <DialogDescription>
-              Detailed information about {selectedBank?.name}
+              Detailed information about {selectedBank?.bank_name}
             </DialogDescription>
           </DialogHeader>
           
@@ -273,11 +352,15 @@ const ConnectedBanks = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground mb-1">Bank Name</h4>
-                  <p>{selectedBank.name}</p>
+                  <p>{selectedBank.bank_name}</p>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground mb-1">Status</h4>
-                  <Badge className={selectedBank.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}>
+                  <Badge className={
+                    selectedBank.status === 'active' ? 'bg-green-100 text-green-600' : 
+                    selectedBank.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
+                    'bg-red-100 text-red-600'
+                  }>
                     {selectedBank.status}
                   </Badge>
                 </div>
@@ -289,6 +372,18 @@ const ConnectedBanks = () => {
                   <h4 className="text-sm font-medium text-muted-foreground mb-1">Connected Date</h4>
                   <p>{new Date(selectedBank.connected_at).toLocaleDateString()}</p>
                 </div>
+                {selectedBank.bank_code && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Bank Code</h4>
+                    <p>{selectedBank.bank_code}</p>
+                  </div>
+                )}
+                {selectedBank.api_endpoint && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">API Endpoint</h4>
+                    <p className="text-xs break-all">{selectedBank.api_endpoint}</p>
+                  </div>
+                )}
               </div>
             </div>
           )}

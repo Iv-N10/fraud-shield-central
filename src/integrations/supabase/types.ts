@@ -78,6 +78,107 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_connections: {
+        Row: {
+          api_endpoint: string | null
+          bank_code: string | null
+          bank_name: string
+          connected_at: string
+          connection_config: Json | null
+          created_at: string
+          id: string
+          integration_type: string
+          last_sync_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          api_endpoint?: string | null
+          bank_code?: string | null
+          bank_name: string
+          connected_at?: string
+          connection_config?: Json | null
+          created_at?: string
+          id?: string
+          integration_type: string
+          last_sync_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          api_endpoint?: string | null
+          bank_code?: string | null
+          bank_name?: string
+          connected_at?: string
+          connection_config?: Json | null
+          created_at?: string
+          id?: string
+          integration_type?: string
+          last_sync_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bank_transaction_feed: {
+        Row: {
+          amount: number
+          bank_connection_id: string
+          created_at: string
+          currency: string
+          description: string | null
+          external_transaction_id: string
+          fraud_score: number | null
+          fraud_status: string | null
+          id: string
+          processed_at: string
+          recipient_account: string | null
+          sender_account: string | null
+          transaction_type: string
+        }
+        Insert: {
+          amount: number
+          bank_connection_id: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          external_transaction_id: string
+          fraud_score?: number | null
+          fraud_status?: string | null
+          id?: string
+          processed_at?: string
+          recipient_account?: string | null
+          sender_account?: string | null
+          transaction_type: string
+        }
+        Update: {
+          amount?: number
+          bank_connection_id?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          external_transaction_id?: string
+          fraud_score?: number | null
+          fraud_status?: string | null
+          id?: string
+          processed_at?: string
+          recipient_account?: string | null
+          sender_account?: string | null
+          transaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_transaction_feed_bank_connection_id_fkey"
+            columns: ["bank_connection_id"]
+            isOneToOne: false
+            referencedRelation: "bank_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fraud_patterns: {
         Row: {
           confidence_level: number
@@ -205,6 +306,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notification_settings: {
+        Row: {
+          created_at: string
+          email: string | null
+          email_notifications: Json | null
+          id: string
+          phone: string | null
+          sms_notifications: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          email_notifications?: Json | null
+          id?: string
+          phone?: string | null
+          sms_notifications?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          email_notifications?: Json | null
+          id?: string
+          phone?: string | null
+          sms_notifications?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
