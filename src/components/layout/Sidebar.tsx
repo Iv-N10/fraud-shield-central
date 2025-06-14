@@ -85,10 +85,17 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <div className="px-6 py-4">
-          <Link to="/dashboard" className="font-bold text-xl">
-            Zentra
+          <Link to="/dashboard" className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/e88c4b79-44aa-4e59-94c3-3fa7f7dd1bce.png" 
+              alt="Zentra Logo" 
+              className="w-8 h-8 object-contain"
+            />
+            <div>
+              <div className="font-bold text-xl">Zentra</div>
+              <p className="text-xs text-muted-foreground">The AI Core of Trust</p>
+            </div>
           </Link>
-          <p className="text-xs text-muted-foreground mt-1">The AI Core of Trust</p>
         </div>
         {navigationItems.map((section, index) => (
           <SidebarGroup key={index}>
