@@ -32,6 +32,23 @@ interface SmsNotifications {
   security_alerts: boolean;
 }
 
+// Type guard functions
+const isEmailNotifications = (obj: any): obj is EmailNotifications => {
+  return obj && 
+    typeof obj === 'object' && 
+    typeof obj.fraud_alerts === 'boolean' &&
+    typeof obj.kyc_updates === 'boolean' &&
+    typeof obj.reports === 'boolean' &&
+    typeof obj.system_updates === 'boolean';
+};
+
+const isSmsNotifications = (obj: any): obj is SmsNotifications => {
+  return obj && 
+    typeof obj === 'object' && 
+    typeof obj.high_risk_alerts === 'boolean' &&
+    typeof obj.security_alerts === 'boolean';
+};
+
 const NotificationSettings = () => {
   const [settings, setSettings] = useState({
     email: '',
@@ -71,19 +88,27 @@ const NotificationSettings = () => {
   // Update local state when data is fetched
   useEffect(() => {
     if (notificationData) {
+      const emailNotifications = isEmailNotifications(notificationData.email_notifications) 
+        ? notificationData.email_notifications 
+        : {
+            fraud_alerts: true,
+            kyc_updates: true,
+            reports: true,
+            system_updates: true
+          };
+
+      const smsNotifications = isSmsNotifications(notificationData.sms_notifications)
+        ? notificationData.sms_notifications
+        : {
+            high_risk_alerts: true,
+            security_alerts: true
+          };
+
       setSettings({
         email: notificationData.email || '',
         phone: notificationData.phone || '',
-        email_notifications: (notificationData.email_notifications as EmailNotifications) || {
-          fraud_alerts: true,
-          kyc_updates: true,
-          reports: true,
-          system_updates: true
-        },
-        sms_notifications: (notificationData.sms_notifications as SmsNotifications) || {
-          high_risk_alerts: true,
-          security_alerts: true
-        }
+        email_notifications: emailNotifications,
+        sms_notifications: smsNotifications
       });
     }
   }, [notificationData]);
@@ -116,13 +141,13 @@ const NotificationSettings = () => {
     mutationFn: async (newSettings: typeof settings) => {
       const { data, error } = await supabase
         .from('notification_settings')
-        .upsert([{
+        .upsert({
           email: newSettings.email,
           phone: newSettings.phone,
           email_notifications: newSettings.email_notifications,
           sms_notifications: newSettings.sms_notifications,
           user_id: (await supabase.auth.getUser()).data.user?.id
-        }])
+        })
         .select()
         .single();
       
