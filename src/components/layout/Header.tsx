@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,6 +62,8 @@ export function Header() {
           <Bell className="h-5 w-5" />
           <span className="sr-only">Notifications</span>
         </Button>
+
+        <ThemeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
