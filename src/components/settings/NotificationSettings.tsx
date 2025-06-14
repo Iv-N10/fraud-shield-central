@@ -139,6 +139,12 @@ const NotificationSettings = () => {
   // Save notification settings mutation
   const saveSettingsMutation = useMutation({
     mutationFn: async (newSettings: typeof settings) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('notification_settings')
         .upsert({
@@ -146,7 +152,7 @@ const NotificationSettings = () => {
           phone: newSettings.phone,
           email_notifications: newSettings.email_notifications,
           sms_notifications: newSettings.sms_notifications,
-          user_id: (await supabase.auth.getUser()).data.user?.id
+          user_id: user.id
         })
         .select()
         .single();
