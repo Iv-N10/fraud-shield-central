@@ -18,47 +18,13 @@ interface IPRisk {
 
 export default function IPReputationScoring() {
   const [searchIP, setSearchIP] = useState('');
-  const [recentIPs, setRecentIPs] = useState<IPRisk[]>([
-    {
-      ip: '192.168.1.45',
-      riskScore: 85,
-      country: 'Russia',
-      city: 'Moscow',
-      isp: 'VPN Provider Ltd',
-      threatTypes: ['VPN', 'Proxy', 'Botnet'],
-      lastSeen: new Date(Date.now() - 300000).toISOString(),
-      transactionCount: 23,
-      status: 'malicious'
-    },
-    {
-      ip: '10.0.0.123',
-      riskScore: 65,
-      country: 'United States',
-      city: 'New York',
-      isp: 'Residential ISP',
-      threatTypes: ['High Velocity'],
-      lastSeen: new Date(Date.now() - 600000).toISOString(),
-      transactionCount: 8,
-      status: 'suspicious'
-    },
-    {
-      ip: '203.45.67.89',
-      riskScore: 15,
-      country: 'United Kingdom',
-      city: 'London',
-      isp: 'BT Group',
-      threatTypes: [],
-      lastSeen: new Date(Date.now() - 1800000).toISOString(),
-      transactionCount: 3,
-      status: 'clean'
-    }
-  ]);
+  const [recentIPs, setRecentIPs] = useState<IPRisk[]>([]);
 
   const [stats] = useState({
-    totalChecked: 1247,
-    blocked: 89,
-    flagged: 156,
-    clean: 1002
+    totalChecked: 0,
+    blocked: 0,
+    flagged: 0,
+    clean: 0
   });
 
   const handleSearch = () => {

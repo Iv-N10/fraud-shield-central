@@ -2,9 +2,8 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Network, Users, TrendingUp, AlertTriangle, Play, Pause } from 'lucide-react';
+import { Network, Users, TrendingUp, AlertTriangle, Play, Pause, Info } from 'lucide-react';
 
 export default function GraphNeuralNetworks() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -26,38 +25,13 @@ export default function GraphNeuralNetworks() {
     }, 500);
   };
 
-  const fraudRings = [
-    {
-      id: 'FR001',
-      name: 'Identity Theft Ring',
-      nodes: 45,
-      transactions: 234,
-      riskScore: 95,
-      status: 'critical'
-    },
-    {
-      id: 'FR002',
-      name: 'Card Cloning Network',
-      nodes: 23,
-      transactions: 156,
-      riskScore: 78,
-      status: 'high'
-    },
-    {
-      id: 'FR003',
-      name: 'Synthetic Identity Chain',
-      nodes: 12,
-      transactions: 89,
-      riskScore: 62,
-      status: 'medium'
-    }
-  ];
+  const fraudRings = [];
 
   const networkMetrics = [
-    { label: 'Total Nodes', value: '2,847', icon: Users },
-    { label: 'Connected Components', value: '156', icon: Network },
-    { label: 'Suspicious Clusters', value: '23', icon: AlertTriangle },
-    { label: 'Detection Accuracy', value: '94.2%', icon: TrendingUp }
+    { label: 'Total Nodes', value: '0', icon: Users },
+    { label: 'Connected Components', value: '0', icon: Network },
+    { label: 'Suspicious Clusters', value: '0', icon: AlertTriangle },
+    { label: 'Detection Accuracy', value: 'N/A', icon: TrendingUp }
   ];
 
   return (
@@ -116,25 +90,10 @@ export default function GraphNeuralNetworks() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {fraudRings.map((ring) => (
-              <div key={ring.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{ring.name}</h3>
-                    <Badge variant={ring.status === 'critical' ? 'destructive' : ring.status === 'high' ? 'secondary' : 'default'}>
-                      {ring.status}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {ring.nodes} nodes • {ring.transactions} transactions • Risk: {ring.riskScore}%
-                  </p>
-                </div>
-                <Button variant="outline" size="sm">
-                  Investigate
-                </Button>
-              </div>
-            ))}
+          <div className="text-center py-12 text-muted-foreground">
+            <Info className="h-16 w-16 mx-auto mb-4" />
+            <p className="text-lg mb-2">No fraud rings detected</p>
+            <p className="text-sm">Network analysis will identify suspicious patterns when transaction data is available</p>
           </div>
         </CardContent>
       </Card>
