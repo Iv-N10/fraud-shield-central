@@ -1,12 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogContent,
@@ -27,12 +26,9 @@ import {
   Bell, 
   Settings, 
   AlertTriangle, 
-  Mail, 
-  MessageSquare, 
-  Smartphone,
   Plus,
-  X,
-  Check
+  Check,
+  Info
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -44,16 +40,6 @@ interface AlertRule {
   channels: string[];
   enabled: boolean;
   priority: 'low' | 'medium' | 'high' | 'critical';
-}
-
-interface AlertNotification {
-  id: string;
-  title: string;
-  message: string;
-  priority: string;
-  timestamp: string;
-  acknowledged: boolean;
-  ruleId: string;
 }
 
 export default function SmartAlertSystem() {
@@ -87,7 +73,8 @@ export default function SmartAlertSystem() {
     }
   ]);
 
-  const [notifications, setNotifications] = useState<AlertNotification[]>([]);
+  // No fake notifications - empty array
+  const [notifications] = useState([]);
   const [showRuleDialog, setShowRuleDialog] = useState(false);
   const [newRule, setNewRule] = useState<Partial<AlertRule>>({
     name: '',
@@ -99,47 +86,12 @@ export default function SmartAlertSystem() {
   });
   const { toast } = useToast();
 
-  // Simulate incoming alerts
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.7) { // 30% chance every 10 seconds
-        const mockAlert: AlertNotification = {
-          id: Date.now().toString(),
-          title: 'High-Risk Transaction Detected',
-          message: `Transaction TXN-${Math.floor(Math.random() * 10000)} flagged with risk score 85`,
-          priority: 'high',
-          timestamp: new Date().toISOString(),
-          acknowledged: false,
-          ruleId: '1'
-        };
-        
-        setNotifications(prev => [mockAlert, ...prev.slice(0, 19)]);
-        
-        toast({
-          title: "🚨 Alert Triggered",
-          description: mockAlert.message,
-          variant: "destructive",
-        });
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [toast]);
+  // No simulated alerts - removed useEffect
 
   const toggleRule = (ruleId: string) => {
     setAlertRules(prev => 
       prev.map(rule => 
         rule.id === ruleId ? { ...rule, enabled: !rule.enabled } : rule
-      )
-    );
-  };
-
-  const acknowledgeAlert = (alertId: string) => {
-    setNotifications(prev =>
-      prev.map(notification =>
-        notification.id === alertId 
-          ? { ...notification, acknowledged: true }
-          : notification
       )
     );
   };
@@ -187,8 +139,6 @@ export default function SmartAlertSystem() {
     }
   };
 
-  const unacknowledgedCount = notifications.filter(n => !n.acknowledged).length;
-
   return (
     <div className="space-y-6">
       {/* Alert Overview */}
@@ -210,9 +160,9 @@ export default function SmartAlertSystem() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Pending Alerts</p>
-                <p className="text-2xl font-bold text-red-600">{unacknowledgedCount}</p>
+                <p className="text-2xl font-bold">0</p>
               </div>
-              <Bell className="h-8 w-8 text-red-500" />
+              <Bell className="h-8 w-8 text-muted-foreground" />
             </div>
           </CardContent>
         </Card>
@@ -222,9 +172,9 @@ export default function SmartAlertSystem() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Alerts Today</p>
-                <p className="text-2xl font-bold">{notifications.length}</p>
+                <p className="text-2xl font-bold">0</p>
               </div>
-              <AlertTriangle className="h-8 w-8 text-amber-500" />
+              <AlertTriangle className="h-8 w-8 text-muted-foreground" />
             </div>
           </CardContent>
         </Card>
@@ -350,49 +300,10 @@ export default function SmartAlertSystem() {
             <CardDescription>Latest triggered alerts and notifications</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3 max-h-[400px] overflow-y-auto">
-              {notifications.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Bell className="h-12 w-12 mx-auto mb-4" />
-                  <p>No alerts triggered yet</p>
-                </div>
-              ) : (
-                notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`p-3 border rounded-lg ${
-                      notification.acknowledged ? 'bg-muted/50' : 'bg-background'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-sm">{notification.title}</h4>
-                          <Badge className={getPriorityColor(notification.priority)}>
-                            {notification.priority}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-2">
-                          {notification.message}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(notification.timestamp).toLocaleString()}
-                        </p>
-                      </div>
-                      {!notification.acknowledged && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => acknowledgeAlert(notification.id)}
-                          className="ml-2"
-                        >
-                          <Check className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                ))
-              )}
+            <div className="text-center py-12 text-muted-foreground">
+              <Info className="h-16 w-16 mx-auto mb-4" />
+              <p className="text-lg mb-2">No alerts triggered</p>
+              <p className="text-sm">Alerts will appear here when detection rules are triggered</p>
             </div>
           </CardContent>
         </Card>
