@@ -1,16 +1,16 @@
 
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import { AppSidebar } from './Sidebar';
 import { Header } from './Header';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 
 export default function DashboardLayout() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <Sidebar />
+        <AppSidebar />
         <div className="flex-1 flex flex-col">
           <Header />
           <div className={cn(
