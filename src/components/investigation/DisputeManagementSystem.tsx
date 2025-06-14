@@ -5,12 +5,25 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { FileText, Clock, CheckCircle, AlertTriangle, DollarSign } from 'lucide-react';
+import { FileText, Clock, CheckCircle, AlertTriangle, DollarSign, Search } from 'lucide-react';
+
+interface Dispute {
+  id: string;
+  transactionId: string;
+  customerName: string;
+  amount: number;
+  reason: string;
+  status: 'pending' | 'investigating' | 'resolved';
+  daysOpen: number;
+  priority: 'low' | 'medium' | 'high';
+  merchantName: string;
+}
 
 export default function DisputeManagementSystem() {
-  const [selectedDispute, setSelectedDispute] = useState(null);
+  const [selectedDispute, setSelectedDispute] = useState<Dispute | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const disputes = [
+  const disputes: Dispute[] = [
     {
       id: 'DISP-001',
       transactionId: 'TXN-789456',
@@ -66,6 +79,38 @@ export default function DisputeManagementSystem() {
     }
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'border-amber-500 text-amber-600 bg-amber-50';
+      case 'investigating':
+        return 'border-blue-500 text-blue-600 bg-blue-50';
+      case 'resolved':
+        return 'border-green-500 text-green-600 bg-green-50';
+      default:
+        return 'border-gray-500 text-gray-600 bg-gray-50';
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'destructive';
+      case 'medium':
+        return 'secondary';
+      case 'low':
+        return 'outline';
+      default:
+        return 'outline';
+    }
+  };
+
+  const filteredDisputes = disputes.filter(dispute =>
+    dispute.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    dispute.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    dispute.reason.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -97,28 +142,29 @@ export default function DisputeManagementSystem() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex gap-4">
-              <Input placeholder="Search disputes..." className="flex-1" />
+              <div className="relative flex-1">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Search disputes..." 
+                  className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
               <Button>New Dispute</Button>
             </div>
             
             <div className="space-y-3">
-              {disputes.map((dispute) => (
+              {filteredDisputes.map((dispute) => (
                 <div key={dispute.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       {getStatusIcon(dispute.status)}
                       <h3 className="font-medium">{dispute.id}</h3>
-                      <Badge variant={
-                        dispute.priority === 'high' ? 'destructive' :
-                        dispute.priority === 'medium' ? 'secondary' : 'outline'
-                      }>
+                      <Badge variant={getPriorityColor(dispute.priority)}>
                         {dispute.priority}
                       </Badge>
-                      <Badge variant="outline" className={
-                        dispute.status === 'pending' ? 'border-amber-500 text-amber-600' :
-                        dispute.status === 'investigating' ? 'border-blue-500 text-blue-600' :
-                        'border-green-500 text-green-600'
-                      }>
+                      <Badge variant="outline" className={getStatusColor(dispute.status)}>
                         {dispute.status}
                       </Badge>
                     </div>
@@ -131,7 +177,11 @@ export default function DisputeManagementSystem() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedDispute(dispute)}
+                    >
                       View Details
                     </Button>
                     {dispute.status === 'pending' && (
@@ -142,6 +192,13 @@ export default function DisputeManagementSystem() {
                   </div>
                 </div>
               ))}
+              
+              {filteredDisputes.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  <FileText className="h-12 w-12 mx-auto mb-4" />
+                  <p>No disputes found matching your search</p>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
