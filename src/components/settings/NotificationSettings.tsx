@@ -145,15 +145,17 @@ const NotificationSettings = () => {
         throw new Error('User not authenticated');
       }
 
+      const settingsToSave = {
+        email: newSettings.email,
+        phone: newSettings.phone,
+        email_notifications: newSettings.email_notifications as any,
+        sms_notifications: newSettings.sms_notifications as any,
+        user_id: user.id
+      };
+
       const { data, error } = await supabase
         .from('notification_settings')
-        .upsert({
-          email: newSettings.email,
-          phone: newSettings.phone,
-          email_notifications: newSettings.email_notifications,
-          sms_notifications: newSettings.sms_notifications,
-          user_id: user.id
-        })
+        .upsert(settingsToSave)
         .select()
         .single();
       
