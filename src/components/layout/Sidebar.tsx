@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Sidebar,
@@ -87,7 +86,7 @@ export function AppSidebar() {
         <div className="px-6 py-4">
           <Link to="/dashboard" className="flex items-center gap-3">
             <img 
-              src="/lovable-uploads/71929ab8-4c06-4b11-b8ac-20f94a8c3e91.png" 
+              src="/lovable-uploads/a214adb1-1327-4a83-9cfb-06148d9998f3.png" 
               alt="Zentra Logo" 
               className="w-8 h-8 object-contain"
             />
