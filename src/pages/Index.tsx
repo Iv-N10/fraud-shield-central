@@ -5,7 +5,7 @@ const Index = () => {
       <div className="text-center">
         <div className="flex justify-center mb-6">
           <img 
-            src="/lovable-uploads/e88c4b79-44aa-4e59-94c3-3fa7f7dd1bce.png" 
+            src="/lovable-uploads/71929ab8-4c06-4b11-b8ac-20f94a8c3e91.png" 
             alt="Zentra Logo" 
             className="w-24 h-24 object-contain"
           />
