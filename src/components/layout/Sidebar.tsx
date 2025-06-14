@@ -85,8 +85,8 @@ const Sidebar = () => {
     <div className="w-64 bg-card border-r border-border h-screen overflow-y-auto">
       <div className="p-6">
         <div className="flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground font-bold">FS</div>
-          <h1 className="text-lg font-bold">FraudShield</h1>
+          <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground font-bold">Z</div>
+          <h1 className="text-lg font-bold">Zentra</h1>
         </div>
         
         <nav className="space-y-2">
