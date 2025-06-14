@@ -20,6 +20,18 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+interface EmailNotifications {
+  fraud_alerts: boolean;
+  kyc_updates: boolean;
+  reports: boolean;
+  system_updates: boolean;
+}
+
+interface SmsNotifications {
+  high_risk_alerts: boolean;
+  security_alerts: boolean;
+}
+
 const NotificationSettings = () => {
   const [settings, setSettings] = useState({
     email: '',
@@ -29,11 +41,11 @@ const NotificationSettings = () => {
       kyc_updates: true,
       reports: true,
       system_updates: true
-    },
+    } as EmailNotifications,
     sms_notifications: {
       high_risk_alerts: true,
       security_alerts: true
-    }
+    } as SmsNotifications
   });
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -62,13 +74,13 @@ const NotificationSettings = () => {
       setSettings({
         email: notificationData.email || '',
         phone: notificationData.phone || '',
-        email_notifications: notificationData.email_notifications || {
+        email_notifications: (notificationData.email_notifications as EmailNotifications) || {
           fraud_alerts: true,
           kyc_updates: true,
           reports: true,
           system_updates: true
         },
-        sms_notifications: notificationData.sms_notifications || {
+        sms_notifications: (notificationData.sms_notifications as SmsNotifications) || {
           high_risk_alerts: true,
           security_alerts: true
         }
@@ -156,7 +168,7 @@ const NotificationSettings = () => {
     }
   });
 
-  const handleEmailNotificationChange = (key: string, value: boolean) => {
+  const handleEmailNotificationChange = (key: keyof EmailNotifications, value: boolean) => {
     setSettings(prev => ({
       ...prev,
       email_notifications: {
@@ -166,7 +178,7 @@ const NotificationSettings = () => {
     }));
   };
 
-  const handleSmsNotificationChange = (key: string, value: boolean) => {
+  const handleSmsNotificationChange = (key: keyof SmsNotifications, value: boolean) => {
     setSettings(prev => ({
       ...prev,
       sms_notifications: {

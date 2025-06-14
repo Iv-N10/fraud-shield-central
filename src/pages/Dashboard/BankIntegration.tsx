@@ -89,9 +89,12 @@ const BankIntegration = () => {
   // Create bank connection mutation
   const createBankConnectionMutation = useMutation({
     mutationFn: async (connectionData: any) => {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) throw new Error('User not authenticated');
+
       const { data, error } = await supabase
         .from('bank_connections')
-        .insert([{
+        .insert({
           bank_name: connectionData.bankName,
           bank_code: connectionData.bankCode,
           integration_type: connectionData.integrationType,
@@ -100,8 +103,9 @@ const BankIntegration = () => {
           connection_config: {
             api_key: connectionData.apiKey,
             webhook_url: connectionData.webhookUrl
-          }
-        }])
+          },
+          user_id: user.user.id
+        })
         .select()
         .single();
       
