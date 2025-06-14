@@ -34,3 +34,35 @@ WITH CHECK (true);
 CREATE TRIGGER set_subscribers_updated_at
   BEFORE UPDATE ON public.subscribers
   FOR EACH ROW EXECUTE PROCEDURE public.set_updated_at();
+
+-- Add account_type column to profiles table
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS account_type TEXT CHECK (account_type IN ('individual', 'financial_institution')) DEFAULT 'individual';
+
+-- Update the handle_new_user function to include account_type
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $function$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, company, account_type)
+  VALUES (
+    new.id, 
+    new.raw_user_meta_data->>'name', 
+    new.raw_user_meta_data->>'company',
+    COALESCE(new.raw_user_meta_data->>'account_type', 'individual')
+  );
+  RETURN new;
+END;
+$function$;
+
+-- Create trigger if it doesn't exist
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'on_auth_user_created') THEN
+    CREATE TRIGGER on_auth_user_created
+      AFTER INSERT ON auth.users
+      FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+  END IF;
+END
+$$;

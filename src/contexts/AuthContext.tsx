@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Session, User } from '@supabase/supabase-js';
@@ -7,9 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 type AuthContextType = {
   session: Session | null;
   user: User | null;
+  userProfile: any;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string, company: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string, company: string, accountType: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -18,12 +20,32 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
   
   // Track initialization to avoid duplicate redirects
   const [isInitialized, setIsInitialized] = useState(false);
+  
+  // Fetch user profile data
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching profile:', error);
+      } else {
+        setUserProfile(data);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
   
   useEffect(() => {
     // Flag to prevent multiple redirects
@@ -37,6 +59,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Update state synchronously
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
+        
+        // Fetch profile data when user signs in
+        if (currentSession?.user && event === 'SIGNED_IN') {
+          setTimeout(() => {
+            fetchUserProfile(currentSession.user.id);
+          }, 0);
+        } else if (event === 'SIGNED_OUT') {
+          setUserProfile(null);
+        }
         
         // Only handle navigation on main auth events and if not already redirecting
         if (!isRedirecting) {
@@ -70,6 +101,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Update state
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
+        
+        // Fetch profile if user exists
+        if (currentSession?.user) {
+          await fetchUserProfile(currentSession.user.id);
+        }
         
         // Only redirect on initial load if we have a session
         if (currentSession?.user && !isRedirecting) {
@@ -123,7 +159,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, company: string) => {
+  const signUp = async (email: string, password: string, name: string, company: string, accountType: string) => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signUp({
@@ -133,6 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           data: {
             name,
             company,
+            account_type: accountType,
           },
         },
       });
@@ -182,6 +219,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         session,
         user,
+        userProfile,
         loading,
         signIn,
         signUp,

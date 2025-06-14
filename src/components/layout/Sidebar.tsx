@@ -1,314 +1,120 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { useAccountType } from '@/hooks/useAccountType';
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-} from '@/components/ui/sidebar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  User2,
-  ChevronUp,
   LayoutDashboard,
   CreditCard,
   Activity,
   Shield,
   FileText,
   Settings,
-  AlertTriangle,
-  TrendingUp,
-  Brain,
-  Users,
-  Database,
-  Clock,
+  User,
+  Bot,
+  Eye,
   Building,
+  Zap,
+  Brain,
   Search,
+  Scale,
   Atom,
-  Fingerprint
+  TrendingUp,
+  Users,
+  PieChart,
+  Briefcase,
+  Cpu,
+  Fingerprint,
+  Building2,
+  University,
+  BarChart3,
+  ShieldCheck,
+  Target,
+  BookOpen,
+  MessageSquare,
+  Quantum
 } from 'lucide-react';
 
-// This is sample data.
-const data = {
-  user: {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Overview",
-      items: [
-        {
-          title: "Dashboard",
-          url: "/dashboard",
-          icon: LayoutDashboard,
-        },
-        {
-          title: "Executive Dashboard",
-          url: "/dashboard/executive",
-          icon: TrendingUp,
-        },
-      ],
-    },
-    {
-      title: "Transaction Management",
-      items: [
-        {
-          title: "My Transactions",
-          url: "/dashboard/transactions",
-          icon: CreditCard,
-        },
-        {
-          title: "Payments",
-          url: "/dashboard/payments",
-          icon: CreditCard,
-        },
-        {
-          title: "Activity",
-          url: "/dashboard/activity",
-          icon: Activity,
-        },
-      ],
-    },
-    {
-      title: "Enhanced Security",
-      items: [
-        {
-          title: "Enhanced Security Center",
-          url: "/dashboard/enhanced-security",
-          icon: Shield,
-          isNew: true,
-        },
-        {
-          title: "Security Center",
-          url: "/dashboard/security",
-          icon: Shield,
-        },
-        {
-          title: "Behavioral Biometrics",
-          url: "/dashboard/behavioral-biometrics",
-          icon: Fingerprint,
-          isNew: true,
-        },
-        {
-          title: "Real-time Monitoring",
-          url: "/dashboard/real-time-monitoring",
-          icon: Activity,
-        },
-        {
-          title: "Device Fingerprinting",
-          url: "/dashboard/device-fingerprinting",
-          icon: Users,
-        },
-      ],
-    },
-    {
-      title: "AI & Intelligence",
-      items: [
-        {
-          title: "AI Assistant",
-          url: "/dashboard/ai-assistant",
-          icon: Brain,
-        },
-        {
-          title: "AI Monitor",
-          url: "/dashboard/ai-monitor",
-          icon: Brain,
-        },
-        {
-          title: "Advanced Intelligence",
-          url: "/dashboard/advanced-intelligence",
-          icon: Search,
-        },
-        {
-          title: "Predictive Risk Scoring",
-          url: "/dashboard/predictive-risk-scoring",
-          icon: TrendingUp,
-        },
-        {
-          title: "Behavioral Analytics",
-          url: "/dashboard/behavioral-analytics",
-          icon: Activity,
-        },
-        {
-          title: "Natural Language Query",
-          url: "/dashboard/natural-language-query",
-          icon: Search,
-        },
-      ],
-    },
-    {
-      title: "Investigation & Compliance",
-      items: [
-        {
-          title: "Advanced Investigation",
-          url: "/dashboard/advanced-investigation",
-          icon: Search,
-        },
-        {
-          title: "KYC",
-          url: "/dashboard/kyc",
-          icon: Users,
-        },
-        {
-          title: "Legal Compliance",
-          url: "/dashboard/legal-compliance",
-          icon: FileText,
-        },
-        {
-          title: "Reports",
-          url: "/dashboard/reports",
-          icon: FileText,
-        },
-      ],
-    },
-    {
-      title: "Banking & Integration",
-      items: [
-        {
-          title: "Bank Integration",
-          url: "/dashboard/bank-integration",
-          icon: Building,
-        },
-        {
-          title: "Connected Banks",
-          url: "/dashboard/connected-banks",
-          icon: Database,
-        },
-      ],
-    },
-    {
-      title: "Enterprise & Advanced",
-      items: [
-        {
-          title: "Business Intelligence",
-          url: "/dashboard/business-intelligence",
-          icon: TrendingUp,
-        },
-        {
-          title: "Enterprise Features",
-          url: "/dashboard/enterprise-features",
-          icon: Building,
-        },
-        {
-          title: "Quantum-Ready Tech",
-          url: "/dashboard/quantum-ready-tech",
-          icon: Atom,
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      items: [
-        {
-          title: "Settings",
-          url: "/dashboard/settings",
-          icon: Settings,
-        },
-      ],
-    },
-  ],
-};
-
-export function AppSidebar() {
+const Sidebar = () => {
   const location = useLocation();
+  const { isIndividual, isFinancialInstitution } = useAccountType();
+
+  const individualMenuItems = [
+    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
+    { icon: CreditCard, label: 'Payments', href: '/dashboard/payments' },
+    { icon: Activity, label: 'My Transactions', href: '/dashboard/my-transactions' },
+    { icon: Shield, label: 'Security', href: '/dashboard/security' },
+    { icon: ShieldCheck, label: 'Enhanced Security', href: '/dashboard/enhanced-security' },
+    { icon: Fingerprint, label: 'Behavioral Analytics', href: '/dashboard/behavioral-analytics' },
+    { icon: FileText, label: 'Reports', href: '/dashboard/reports' },
+    { icon: User, label: 'KYC', href: '/dashboard/kyc' },
+    { icon: Bot, label: 'AI Assistant', href: '/dashboard/ai-assistant' },
+    { icon: Eye, label: 'AI Monitor', href: '/dashboard/ai-monitor' },
+    { icon: Settings, label: 'Settings', href: '/dashboard/settings' },
+  ];
+
+  const financialInstitutionMenuItems = [
+    { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
+    { icon: Activity, label: 'Transactions', href: '/dashboard/transactions' },
+    { icon: University, label: 'Bank Integration', href: '/dashboard/bank-integration' },
+    { icon: Building2, label: 'Connected Banks', href: '/dashboard/connected-banks' },
+    { icon: Shield, label: 'Security', href: '/dashboard/security' },
+    { icon: ShieldCheck, label: 'Enhanced Security', href: '/dashboard/enhanced-security' },
+    { icon: Fingerprint, label: 'Behavioral Biometrics', href: '/dashboard/behavioral-biometrics' },
+    { icon: Eye, label: 'Real-Time Monitoring', href: '/dashboard/real-time-monitoring' },
+    { icon: Cpu, label: 'Device Fingerprinting', href: '/dashboard/device-fingerprinting' },
+    { icon: BarChart3, label: 'Business Intelligence', href: '/dashboard/business-intelligence' },
+    { icon: Briefcase, label: 'Case Management', href: '/dashboard/case-management' },
+    { icon: TrendingUp, label: 'Executive Dashboard', href: '/dashboard/executive' },
+    { icon: Building, label: 'Enterprise Features', href: '/dashboard/enterprise-features' },
+    { icon: Brain, label: 'Advanced Intelligence', href: '/dashboard/advanced-intelligence' },
+    { icon: Search, label: 'Advanced Investigation', href: '/dashboard/advanced-investigation' },
+    { icon: Target, label: 'Predictive Risk Scoring', href: '/dashboard/predictive-risk-scoring' },
+    { icon: Scale, label: 'Legal Compliance', href: '/dashboard/legal-compliance' },
+    { icon: MessageSquare, label: 'Natural Language Query', href: '/dashboard/natural-language-query' },
+    { icon: Atom, label: 'Quantum Ready Tech', href: '/dashboard/quantum-ready-tech' },
+    { icon: FileText, label: 'Reports', href: '/dashboard/reports' },
+    { icon: User, label: 'KYC', href: '/dashboard/kyc' },
+    { icon: Bot, label: 'AI Assistant', href: '/dashboard/ai-assistant' },
+    { icon: Eye, label: 'AI Monitor', href: '/dashboard/ai-monitor' },
+    { icon: Settings, label: 'Settings', href: '/dashboard/settings' },
+  ];
+
+  const menuItems = isIndividual ? individualMenuItems : financialInstitutionMenuItems;
 
   return (
-    <Sidebar variant="inset">
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-2">
-          <img 
-            src="/lovable-uploads/a214adb1-1327-4a83-9cfb-06148d9998f3.png" 
-            alt="Zentra" 
-            className="h-8 w-8 object-contain"
-          />
-          <div className="flex flex-col">
-            <span className="text-lg font-bold">Zentra</span>
-            <span className="text-xs text-muted-foreground">FraudShield Pro</span>
-          </div>
+    <div className="w-64 bg-card border-r border-border h-screen overflow-y-auto">
+      <div className="p-6">
+        <div className="flex items-center gap-2 mb-8">
+          <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center text-secondary-foreground font-bold">FS</div>
+          <h1 className="text-lg font-bold">FraudShield</h1>
         </div>
-      </SidebarHeader>
-      <SidebarContent>
-        {data.navMain.map((group) => (
-          <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      asChild 
-                      isActive={location.pathname === item.url}
-                    >
-                      <Link to={item.url} className="flex items-center gap-2">
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                        {item.isNew && (
-                          <span className="ml-auto bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded">
-                            NEW
-                          </span>
-                        )}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <User2 className="h-8 w-8 rounded-lg" />
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{data.user.name}</span>
-                    <span className="truncate text-xs">{data.user.email}</span>
-                  </div>
-                  <ChevronUp className="ml-auto size-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side="bottom"
-                align="end"
-                sideOffset={4}
+        
+        <nav className="space-y-2">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.href;
+            
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-secondary text-secondary-foreground'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                )}
               >
-                <DropdownMenuItem>
-                  <User2 className="mr-2 h-4 w-4" />
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+    </div>
   );
-}
+};
+
+export default Sidebar;
