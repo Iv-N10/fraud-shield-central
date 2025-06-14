@@ -86,8 +86,9 @@ export function AppSidebar() {
       <SidebarContent>
         <div className="px-6 py-4">
           <Link to="/dashboard" className="font-bold text-xl">
-            FraudShield
+            Zentra
           </Link>
+          <p className="text-xs text-muted-foreground mt-1">The AI Core of Trust</p>
         </div>
         {navigationItems.map((section, index) => (
           <SidebarGroup key={index}>
