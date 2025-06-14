@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Sheet,
@@ -23,7 +24,8 @@ import {
   LayoutDashboard,
   Zap,
   Crown,
-  Search
+  Search,
+  AlertCircle
 } from "lucide-react"
 import { NavItem } from "@/types"
 import { Button } from "@/components/ui/button"
@@ -56,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, onClose }) => {
       items: [
         { name: "AI Monitor", href: "/ai-monitor", icon: Shield },
         { name: "Behavioral Analytics", href: "/behavioral-analytics", icon: Users },
-        { name: "Predictive Risk", href: "/predictive-risk", icon: AlertTriangle },
+        { name: "Predictive Risk", href: "/predictive-risk", icon: AlertCircle },
         { name: "Natural Language", href: "/natural-language", icon: File },
         { name: "Device Fingerprinting", href: "/device-fingerprinting", icon: Settings },
       ]
@@ -130,3 +132,4 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, onClose }) => {
 };
 
 export default Sidebar;
+export { Sidebar as AppSidebar };
