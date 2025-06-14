@@ -90,7 +90,6 @@ const data = {
           title: "Enhanced Security Center",
           url: "/dashboard/enhanced-security",
           icon: Shield,
-          isNew: true,
         },
         {
           title: "Security Center",
@@ -101,7 +100,6 @@ const data = {
           title: "Behavioral Biometrics",
           url: "/dashboard/behavioral-biometrics",
           icon: Fingerprint,
-          isNew: true,
         },
         {
           title: "Real-time Monitoring",
@@ -256,11 +254,6 @@ export function AppSidebar() {
                       <Link to={item.url} className="flex items-center gap-2">
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
-                        {item.isNew && (
-                          <span className="ml-auto bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded">
-                            NEW
-                          </span>
-                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
