@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,7 +42,7 @@ export default function AdvancedThreatIntelligence() {
   const [threatMetrics] = useState({
     activeThreatActors: 23,
     blockedAttacks: 1247,
-    zeroDay vulnerabilities: 0,
+    zeroDayVulnerabilities: 0,
     quantumReadiness: 89.5
   });
 
