@@ -9,14 +9,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [company, setCompany] = useState('');
-  const [accountType, setAccountType] = useState('individual');
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState('');
   const { signUp, user, loading } = useAuth();
@@ -36,7 +34,7 @@ export default function Signup() {
     }
     
     try {
-      await signUp(email, password, name, company, accountType);
+      await signUp(email, password, name, company);
       // The auth context will handle redirection
     } catch (err: any) {
       setError(err.message || 'An error occurred during signup');
@@ -68,26 +66,6 @@ export default function Signup() {
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="accountType">Account Type</Label>
-                <RadioGroup value={accountType} onValueChange={setAccountType}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="individual" id="individual" />
-                    <Label htmlFor="individual">Individual</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="financial_institution" id="financial_institution" />
-                    <Label htmlFor="financial_institution">Financial Institution / Bank</Label>
-                  </div>
-                </RadioGroup>
-                <p className="text-xs text-muted-foreground">
-                  {accountType === 'individual' 
-                    ? 'Access fraud protection and payment monitoring features'
-                    : 'Access banking integration and institutional fraud monitoring'
-                  }
-                </p>
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
@@ -111,15 +89,13 @@ export default function Signup() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="company">
-                  {accountType === 'individual' ? 'Company (Optional)' : 'Institution Name'}
-                </Label>
+                <Label htmlFor="company">Company</Label>
                 <Input
                   id="company"
-                  placeholder={accountType === 'individual' ? 'Your Company' : 'Bank/Institution Name'}
+                  placeholder="Your Company"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  required={accountType === 'financial_institution'}
+                  required
                 />
               </div>
               
