@@ -30,6 +30,7 @@ import BankIntegration from '@/pages/Dashboard/BankIntegration';
 import ConnectedBanks from '@/pages/Dashboard/ConnectedBanks';
 import BusinessIntelligence from '@/pages/Dashboard/BusinessIntelligence';
 import EnterpriseFeatures from '@/pages/Dashboard/EnterpriseFeatures';
+import EnterpriseCenter from '@/pages/Dashboard/EnterpriseCenter';
 import AdvancedIntelligence from '@/pages/Dashboard/AdvancedIntelligence';
 import AdvancedInvestigation from '@/pages/Dashboard/AdvancedInvestigation';
 import PredictiveRiskScoring from '@/pages/Dashboard/PredictiveRiskScoring';
@@ -77,6 +78,7 @@ function App() {
               <Route path="connected-banks" element={<ConnectedBanks />} />
               <Route path="business-intelligence" element={<BusinessIntelligence />} />
               <Route path="enterprise-features" element={<EnterpriseFeatures />} />
+              <Route path="enterprise-center" element={<EnterpriseCenter />} />
               <Route path="advanced-intelligence" element={<AdvancedIntelligence />} />
               <Route path="advanced-investigation" element={<AdvancedInvestigation />} />
               <Route path="predictive-risk-scoring" element={<PredictiveRiskScoring />} />

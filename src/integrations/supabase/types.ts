@@ -83,6 +83,48 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          new_values: Json | null
+          old_values: Json | null
+          record_id: string | null
+          table_name: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bank_connections: {
         Row: {
           api_endpoint: string | null
@@ -390,6 +432,89 @@ export type Database = {
         }
         Relationships: []
       }
+      report_executions: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          execution_time_ms: number | null
+          file_path: string | null
+          id: string
+          row_count: number | null
+          status: string
+          template_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          execution_time_ms?: number | null
+          file_path?: string | null
+          id?: string
+          row_count?: number | null
+          status?: string
+          template_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          execution_time_ms?: number | null
+          file_path?: string | null
+          id?: string
+          row_count?: number | null
+          status?: string
+          template_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_executions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "report_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      report_templates: {
+        Row: {
+          chart_config: Json | null
+          created_at: string
+          description: string | null
+          filters: Json | null
+          id: string
+          is_public: boolean
+          name: string
+          query_config: Json
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          chart_config?: Json | null
+          created_at?: string
+          description?: string | null
+          filters?: Json | null
+          id?: string
+          is_public?: boolean
+          name: string
+          query_config: Json
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          chart_config?: Json | null
+          created_at?: string
+          description?: string | null
+          filters?: Json | null
+          id?: string
+          is_public?: boolean
+          name?: string
+          query_config?: Json
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       security_incidents: {
         Row: {
           ai_analysis: Json | null
@@ -487,6 +612,48 @@ export type Database = {
           subscribed?: boolean
           subscription_end?: string | null
           subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      system_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          data: Json | null
+          expires_at: string | null
+          id: string
+          is_read: boolean
+          message: string
+          severity: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          data?: Json | null
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          message: string
+          severity: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          data?: Json | null
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          severity?: string
+          title?: string
           updated_at?: string
           user_id?: string | null
         }

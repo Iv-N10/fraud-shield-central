@@ -202,6 +202,11 @@ const data = {
           icon: Building,
         },
         {
+          title: "Enterprise Center",
+          url: "/dashboard/enterprise-center",
+          icon: Building,
+        },
+        {
           title: "Quantum-Ready Tech",
           url: "/dashboard/quantum-ready-tech",
           icon: Atom,
