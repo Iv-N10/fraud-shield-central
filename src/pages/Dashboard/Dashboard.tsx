@@ -162,7 +162,10 @@ const Dashboard = () => {
             <CardContent className="space-y-3">
               <Button 
                 className="w-full justify-between btn-premium hover:scale-105 transition-transform"
-                onClick={() => navigate('/dashboard/connected-banks')}
+                onClick={() => {
+                  console.log('Navigating to connected-banks');
+                  navigate('/dashboard/connected-banks');
+                }}
               >
                 Connect New Bank
                 <ChevronRight className="w-4 h-4" />
@@ -178,7 +181,10 @@ const Dashboard = () => {
               <Button 
                 className="w-full justify-between" 
                 variant="outline"
-                onClick={() => navigate('/dashboard/reports')}
+                onClick={() => {
+                  console.log('Navigating to reports');
+                  navigate('/dashboard/reports');
+                }}
               >
                 Generate Report
                 <ChevronRight className="w-4 h-4" />
@@ -186,7 +192,10 @@ const Dashboard = () => {
               <Button 
                 className="w-full justify-between" 
                 variant="outline"
-                onClick={() => navigate('/dashboard/security')}
+                onClick={() => {
+                  console.log('Navigating to security');
+                  navigate('/dashboard/security');
+                }}
               >
                 Security Settings
                 <ChevronRight className="w-4 h-4" />
