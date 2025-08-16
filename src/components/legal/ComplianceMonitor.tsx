@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { AlertTriangle, CheckCircle, Shield, Activity, Clock, FileText } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface ComplianceAlert {
   id: string;
@@ -18,6 +20,9 @@ interface ComplianceAlert {
 }
 
 const ComplianceMonitor = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
   const [alerts, setAlerts] = useState<ComplianceAlert[]>([
     {
       id: '1',
@@ -219,7 +224,11 @@ const ComplianceMonitor = () => {
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4" variant="outline">
+            <Button 
+              className="w-full mt-4" 
+              variant="outline"
+              onClick={() => navigate('/dashboard/reports')}
+            >
               View Full Activity Log
             </Button>
           </CardContent>
@@ -236,19 +245,50 @@ const ComplianceMonitor = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-20 flex-col">
+            <Button 
+              variant="outline" 
+              className="h-20 flex-col"
+              onClick={() => navigate('/dashboard/reports')}
+            >
               <Shield className="h-6 w-6 mb-2" />
               Generate Report
             </Button>
-            <Button variant="outline" className="h-20 flex-col">
+            <Button 
+              variant="outline" 
+              className="h-20 flex-col"
+              onClick={() => {
+                toast({
+                  title: "Issue Escalated",
+                  description: "The issue has been escalated to the compliance team."
+                });
+              }}
+            >
               <AlertTriangle className="h-6 w-6 mb-2" />
               Escalate Issue
             </Button>
-            <Button variant="outline" className="h-20 flex-col">
+            <Button 
+              variant="outline" 
+              className="h-20 flex-col"
+              onClick={() => {
+                toast({
+                  title: "Export Started",
+                  description: "Compliance logs are being exported..."
+                });
+              }}
+            >
               <FileText className="h-6 w-6 mb-2" />
               Export Logs
             </Button>
-            <Button variant="outline" className="h-20 flex-col">
+            <Button 
+              variant="outline" 
+              className="h-20 flex-col"
+              onClick={() => {
+                toast({
+                  title: "Audit Started",
+                  description: "Running comprehensive compliance audit..."
+                });
+              }}
+            >
               <Activity className="h-6 w-6 mb-2" />
               Run Audit
             </Button>

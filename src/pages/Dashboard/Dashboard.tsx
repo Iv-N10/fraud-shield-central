@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +21,8 @@ import { supabase } from '@/integrations/supabase/client';
 import RealTimeBankFeed from '@/components/realtime/RealTimeBankFeed';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  
   // Fetch dashboard metrics
   const { data: metrics, isLoading } = useQuery({
     queryKey: ['dashboardMetrics'],
@@ -157,19 +160,34 @@ const Dashboard = () => {
               <CardDescription>Common tasks and shortcuts</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="w-full justify-between btn-premium hover:scale-105 transition-transform">
+              <Button 
+                className="w-full justify-between btn-premium hover:scale-105 transition-transform"
+                onClick={() => navigate('/dashboard/connected-banks')}
+              >
                 Connect New Bank
                 <ChevronRight className="w-4 h-4" />
               </Button>
-              <Button className="w-full justify-between btn-glow" variant="outline">
+              <Button 
+                className="w-full justify-between btn-glow" 
+                variant="outline"
+                onClick={() => navigate('/dashboard/transactions')}
+              >
                 View All Transactions
                 <ChevronRight className="w-4 h-4" />
               </Button>
-              <Button className="w-full justify-between" variant="outline">
+              <Button 
+                className="w-full justify-between" 
+                variant="outline"
+                onClick={() => navigate('/dashboard/reports')}
+              >
                 Generate Report
                 <ChevronRight className="w-4 h-4" />
               </Button>
-              <Button className="w-full justify-between" variant="outline">
+              <Button 
+                className="w-full justify-between" 
+                variant="outline"
+                onClick={() => navigate('/dashboard/security')}
+              >
                 Security Settings
                 <ChevronRight className="w-4 h-4" />
               </Button>
