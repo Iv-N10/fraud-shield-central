@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { passwordSchema, emailSchema } from '@/utils/validation';
 
 type AuthContextType = {
   session: Session | null;
@@ -98,7 +99,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
+      
+      // Validate inputs
+      emailSchema.parse(email);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -107,11 +112,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
       
+      // Log successful authentication
+      setTimeout(() => {
+        if (data.user) {
+          supabase.from('audit_logs').insert({
+            action: 'SIGN_IN',
+            table_name: 'auth.users',
+            record_id: data.user.id,
+            metadata: {
+              email: data.user.email,
+              timestamp: new Date().toISOString()
+            }
+          });
+        }
+      }, 0);
+      
       toast({
         title: 'Login successful',
         description: 'Welcome back to FraudShield Central',
       });
     } catch (error: any) {
+      // Log failed authentication attempt
+      setTimeout(() => {
+        supabase.from('audit_logs').insert({
+          action: 'SIGN_IN_FAILED',
+          table_name: 'auth.users',
+          metadata: {
+            email,
+            error: error.message,
+            timestamp: new Date().toISOString()
+          }
+        });
+      }, 0);
+      
       toast({
         title: 'Login failed',
         description: error.message || 'An error occurred during login',
@@ -126,7 +159,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (email: string, password: string, name: string, company: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({
+      
+      // Validate inputs
+      emailSchema.parse(email);
+      passwordSchema.parse(password);
+      
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -141,6 +179,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         throw error;
       }
+      
+      // Log registration attempt
+      setTimeout(() => {
+        if (data.user) {
+          supabase.from('audit_logs').insert({
+            action: 'SIGN_UP',
+            table_name: 'auth.users',
+            record_id: data.user.id,
+            metadata: {
+              email: data.user.email,
+              timestamp: new Date().toISOString()
+            }
+          });
+        }
+      }, 0);
       
       toast({
         title: 'Account created',
@@ -161,9 +214,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     try {
       setLoading(true);
+      const currentUser = user;
+      
       const { error } = await supabase.auth.signOut();
       if (error) {
         throw error;
+      }
+      
+      // Log sign out
+      if (currentUser) {
+        setTimeout(() => {
+          supabase.from('audit_logs').insert({
+            action: 'SIGN_OUT',
+            table_name: 'auth.users',
+            record_id: currentUser.id,
+            metadata: {
+              email: currentUser.email,
+              timestamp: new Date().toISOString()
+            }
+          });
+        }, 0);
       }
       
       // The onAuthStateChange will handle navigation
