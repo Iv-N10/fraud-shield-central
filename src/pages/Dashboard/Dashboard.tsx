@@ -96,11 +96,11 @@ const Dashboard = () => {
               ${metrics?.threatLevel === 'high' ? 'status-error' : ''}
               ${metrics?.threatLevel === 'medium' ? 'status-warning' : ''}
               ${metrics?.threatLevel === 'low' ? 'status-success' : ''}
-              animate-pulse-glow
+              animate-float
             `}>
               {metrics?.threatLevel?.toUpperCase() || 'UNKNOWN'} THREAT LEVEL
             </Badge>
-            <Badge className="status-success animate-bounce-subtle">
+            <Badge className="status-success animate-float">
               SYSTEM OPERATIONAL
             </Badge>
           </div>
