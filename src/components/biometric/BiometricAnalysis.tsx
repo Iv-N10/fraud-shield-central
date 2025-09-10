@@ -21,14 +21,8 @@ interface BiometricSession {
   duration: number;
 }
 
-const voiceStressData = [
-  { time: '0s', stress: 15, confidence: 95 },
-  { time: '10s', stress: 18, confidence: 93 },
-  { time: '20s', stress: 45, confidence: 87 },
-  { time: '30s', stress: 72, confidence: 78 },
-  { time: '40s', stress: 68, confidence: 82 },
-  { time: '50s', stress: 35, confidence: 91 },
-];
+// Real voice stress analysis would be integrated here - no fake data
+const voiceStressData: any[] = [];
 
 export default function BiometricAnalysis() {
   const [sessions, setSessions] = useState<BiometricSession[]>([
