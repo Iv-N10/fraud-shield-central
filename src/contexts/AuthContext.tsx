@@ -195,10 +195,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }, 0);
       
-      toast({
-        title: 'Account created',
-        description: 'Welcome to FraudShield Central',
-      });
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        toast({
+          title: 'Check your email',
+          description: 'Please verify your email address to complete signup. Then return to login.',
+        });
+        // Redirect to login after a delay
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        toast({
+          title: 'Account created',
+          description: 'Welcome to FraudShield Central',
+        });
+        // If session exists, redirect to dashboard
+        if (data.session) {
+          navigate('/dashboard');
+        }
+      }
     } catch (error: any) {
       toast({
         title: 'Signup failed',
